@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /commande/
+
+Sitemap: https://boucheriedes24h-halal.netlify.app/sitemap.xml
