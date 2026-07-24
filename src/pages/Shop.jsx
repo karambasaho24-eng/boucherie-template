@@ -19,7 +19,7 @@ export default function Shop() {
   const [stockFlash, setStockFlash] = useState(null) // id du produit mis à jour
 
   useEffect(() => {
-    document.title = "Notre carte — Boucherie Le Carrefour d'Orient"
+    document.title = "Notre carte — Ma Boucherie"
   }, [])
 
   // Chargement initial

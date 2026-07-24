@@ -16,7 +16,7 @@ export default function Product() {
         if (error) throw error
         setProduct(data)
         if (data?.name) {
-          document.title = `${data.name} — Boucherie Le Carrefour d'Orient`
+          document.title = `${data.name} — Ma Boucherie`
         }
       })
       .catch(console.error)

@@ -3,7 +3,7 @@ import { useCart } from '../hooks/useCart'
 import DarkModeToggle from './DarkModeToggle'
 
 function LogoTitle({ title }) {
-  const text = title || "Boucherie Le Carrefour d'Orient"
+  const text = title || "Ma Boucherie"
   const idx = text.indexOf("Orient")
 
   if (idx === -1) {

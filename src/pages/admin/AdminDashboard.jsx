@@ -47,7 +47,7 @@ export default function AdminDashboard() {
             </svg>
           )}
           <div>
-            <p className="admin-brand-title">{config?.site_title || "Boucherie Le Carrefour d'Orient"}</p>
+            <p className="admin-brand-title">{config?.site_title || "Ma Boucherie"}</p>
             <p className="admin-brand-sub">Administration</p>
           </div>
         </div>

@@ -73,7 +73,7 @@ export default function Home({ config }) {
   const tiltRef = useMouseTilt()
 
   useEffect(() => {
-    document.title = config?.site_title || "Boucherie Le Carrefour d'Orient"
+    document.title = config?.site_title || "Ma Boucherie"
   }, [config?.site_title])
 
   useEffect(() => {
@@ -144,7 +144,7 @@ export default function Home({ config }) {
         </div>
 
         <div className="hero-topline">
-          <span className="hero-eyebrow">Cuisine africaine authentique</span>
+          <span className="hero-eyebrow">{config?.about_title || 'Boucherie artisanale'}</span>
           <span className="hero-eyebrow hero-eyebrow-right"></span>
         </div>
 
@@ -159,13 +159,13 @@ export default function Home({ config }) {
           </div>
 
           <h1 className="hero-title">
-            <span className="hero-title-line">AFRI<span className="hero-title-accent">C</span>A FOOD</span>
+            <span className="hero-title-line">{config?.site_title || 'Ma Boucherie'}</span>
             <span className="hero-title-rule" />
-            <span className="hero-title-sub">{config?.hero_title || "Le Carrefour d'Orient"}</span>
+            <span className="hero-title-sub">{config?.hero_title || ''}</span>
           </h1>
 
           <p className="hero-subtitle">
-            {config?.hero_subtitle || 'Cuisine africaine faite maison — plats mijotés et préparés avec soin, chaque jour.'}
+            {config?.hero_subtitle || 'Viandes fraîches et préparations artisanales, sélectionnées avec exigence chaque jour.'}
           </p>
 
           <div className="hero-actions">
@@ -303,7 +303,7 @@ export default function Home({ config }) {
             <h2 className="ambiance-title">{config?.about_title || 'Notre histoire'}</h2>
             <p className="ambiance-text">
               {config?.about_text ||
-                "Le Carrefour d'Orient, nous vous accueillons chaque jour avec des plats frais, préparés avec soin et le sourire. Notre passion : vous faire voyager à travers les saveurs authentiques de la cuisine africaine."}
+                "Depuis notre boucherie, nous sélectionnons chaque pièce avec exigence et la travaillons à la main, dans le respect des traditions et du savoir-faire artisanal."}
             </p>
             <a href={`tel:${phoneClean}`} className="btn btn-outline" style={{ marginTop: 28 }}>
               Nous appeler

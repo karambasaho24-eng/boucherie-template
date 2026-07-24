@@ -15,7 +15,7 @@ export default function Footer({ config }) {
                 </svg>
               )}
             </span>
-            <h3>{config?.site_title || "Boucherie Le Carrefour d'Orient"}</h3>
+            <h3>{config?.site_title || "Ma Boucherie"}</h3>
             <p>Restaurant africain & cuisine faite maison au cœur des Sablons, Le Mans</p>
             <div className="footer-certif">
               <span>Fait maison</span>
@@ -47,7 +47,7 @@ export default function Footer({ config }) {
 
       <div className="footer-bottom">
         <div className="container footer-bottom-inner">
-          <span>© {new Date().getFullYear()} {config?.site_title || "Boucherie Le Carrefour d'Orient"} — Tous droits réservés</span>
+          <span>© {new Date().getFullYear()} {config?.site_title || "Ma Boucherie"} — Tous droits réservés</span>
           <span className="footer-made">
             Le Mans, France <a href="/admin/login" className="footer-admin-link">· Espace pro</a>
           </span>
