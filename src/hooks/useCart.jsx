@@ -7,7 +7,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import { supabase } from '../lib/supabaseClient'
 
 const CartContext = createContext(null)
-const STORAGE_KEY = 'africa_food_cart'
+const STORAGE_KEY = 'boucherie_cart'
 
 export function CartProvider({ children }) {
   const [items, setItems] = useState(() => {
@@ -70,14 +70,14 @@ export function CartProvider({ children }) {
           availableKg,
           message: availableKg <= 0
             ? 'Ce produit n\'est plus disponible.'
-            : `Vous avez déjà ${currentInCart} en panier (stock : ${availableKg} kg).`,
+            : `Vous avez déjà ${currentInCart} kg dans votre panier (stock : ${availableKg.toFixed(2)} kg).`,
         }
       }
       return {
         ok: false,
         availableKg,
         suggestedKg: remaining,
-        message: `Seulement ${remaining} kg supplémentaire(s) disponible(s).`,
+        message: `Seulement ${remaining.toFixed(2)} kg supplémentaires sont disponibles.`,
       }
     }
 
@@ -143,7 +143,7 @@ export function CartProvider({ children }) {
       if (qty > availableKg) {
         return {
           success: false,
-          message: `Seulement ${availableKg} kg disponible(s).`,
+          message: `Seulement ${availableKg.toFixed(2)} kg disponibles.`,
           suggestedKg: availableKg,
         }
       }

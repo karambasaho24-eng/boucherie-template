@@ -209,7 +209,7 @@ export default function Home({ config }) {
             <span className="info-index">01</span>
             <div>
               <div className="info-label">Adresse</div>
-              <div className="info-value">{config?.address || '77 Rue Voltaire, 72000 Le Mans'}</div>
+              <div className="info-value">{config?.address || 'adresse communiquée après commande'}</div>
             </div>
           </div>
           <div className="info-item reveal reveal-delay-1">

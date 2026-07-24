@@ -35,7 +35,7 @@ export default function StockBadge({ product, compact = false }) {
     low_stock: {
       label: compact
         ? `Stock faible`
-        : `Stock faible (${availableKg} kg)`,
+        : `Stock faible (${availableKg?.toFixed(2)} kg)`,
       dot: '#c47a00',
       bg: 'rgba(196,122,0,0.1)',
       color: '#c47a00',

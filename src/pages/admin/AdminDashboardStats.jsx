@@ -577,7 +577,7 @@ export default function AdminDashboardStats() {
                     {topProducts.map((p) => (
                       <tr key={p.product_id || p.product_name}>
                         <td>{p.product_name}</td>
-                        <td>{Number(p.total_qty)}</td>
+                        <td>{Number(p.total_qty_kg).toFixed(2)} kg</td>
                         <td>{formatEUR(p.total_revenue)}</td>
                       </tr>
                     ))}

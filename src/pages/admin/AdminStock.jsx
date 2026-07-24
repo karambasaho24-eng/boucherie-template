@@ -65,7 +65,7 @@ function StockOverview({ onEdit }) {
             <strong>Alerte stock bas</strong> —{' '}
             {alerts.map((a, i) => (
               <span key={a.id}>
-                {a.name} ({a.stock_available_kg ?? '0'} kg restante(s))
+                {a.name} ({a.stock_available_kg?.toFixed(2) ?? '0'} kg restants)
                 {i < alerts.length - 1 ? ', ' : ''}
               </span>
             ))}
@@ -94,12 +94,12 @@ function StockOverview({ onEdit }) {
           {rows.map((row) => (
             <div key={row.id} className={`stock-row${row.alert_triggered ? ' stock-row-alert' : ''}`}>
               <span className="stock-row-name">{row.name}</span>
-              <span className="mono">{parseInt(row.stock_kg ?? 0)} u.</span>
-              <span className="mono text-muted">{parseInt(row.stock_reserved_kg ?? 0)} u.</span>
+              <span className="mono">{parseFloat(row.stock_kg ?? 0).toFixed(2)} kg</span>
+              <span className="mono text-muted">{parseFloat(row.stock_reserved_kg ?? 0).toFixed(2)} kg</span>
               <span className={`mono ${row.alert_triggered ? 'text-alert' : 'text-ok'}`}>
-                {parseInt(row.stock_available_kg ?? 0)} u.
+                {parseFloat(row.stock_available_kg ?? 0).toFixed(2)} kg
               </span>
-              <span className="mono text-muted">{parseInt(row.stock_alert_kg ?? 0)} u.</span>
+              <span className="mono text-muted">{parseFloat(row.stock_alert_kg ?? 0).toFixed(2)} kg</span>
               <span>
                 <span
                   className="avail-badge"
@@ -136,8 +136,8 @@ function StockEditModal({ product, onClose, onSaved }) {
   const [error, setError] = useState('')
 
   async function handleSave() {
-    const sk = parseInt(stockKg, 10)
-    const ak = parseInt(alertKg, 10)
+    const sk = parseFloat(stockKg)
+    const ak = parseFloat(alertKg)
     if (isNaN(sk) || sk < 0) return setError('Stock invalide.')
     if (isNaN(ak) || ak < 0) return setError('Seuil d\'alerte invalide.')
 
@@ -167,30 +167,30 @@ function StockEditModal({ product, onClose, onSaved }) {
         <h3>Ajuster le stock — {product.name}</h3>
 
         <div className="field">
-          <label>Stock disponible (unités)</label>
+          <label>Stock disponible (kg)</label>
           <input
             className="input"
             type="number"
             min="0"
-            step="1"
+            step="0.1"
             value={stockKg}
             onChange={(e) => setStockKg(e.target.value)}
           />
-          {parseInt(product.stock_reserved_kg ?? 0) > 0 && (
+          {parseFloat(product.stock_reserved_kg ?? 0) > 0 && (
             <p className="field-hint">
-              {parseInt(product.stock_reserved_kg)} kg actuellement réservée(s)
-              — stock disponible réel : {Math.max(parseInt(stockKg || 0) - parseInt(product.stock_reserved_kg), 0)} kg
+              {parseFloat(product.stock_reserved_kg).toFixed(2)} kg actuellement réservés
+              — stock disponible réel : {Math.max(parseFloat(stockKg || 0) - parseFloat(product.stock_reserved_kg), 0).toFixed(2)} kg
             </p>
           )}
         </div>
 
         <div className="field">
-          <label>Seuil d'alerte (unités)</label>
+          <label>Seuil d'alerte (kg)</label>
           <input
             className="input"
             type="number"
             min="0"
-            step="1"
+            step="0.1"
             value={alertKg}
             onChange={(e) => setAlertKg(e.target.value)}
           />
@@ -314,7 +314,7 @@ function ReservationsPanel() {
                   <p className="text-muted mono-small">{r.phone}</p>
                 </div>
                 <span>{r.products?.name ?? '—'}</span>
-                <span className="mono">{parseInt(r.quantity)} u.</span>
+                <span className="mono">{parseFloat(r.quantity_kg).toFixed(2)} kg</span>
                 <span className="text-muted" style={{ fontSize: 12 }}>{r.note ?? '—'}</span>
                 <span>
                   <span className="status-dot" style={{ '--c': sc.color }}>
@@ -393,9 +393,9 @@ function MovementsPanel() {
               <span className="text-muted mono-small">{formatDate(m.created_at)}</span>
               <span>{m.products?.name ?? '—'}</span>
               <span className={`mono delta ${m.delta_kg >= 0 ? 'delta-pos' : 'delta-neg'}`}>
-                {m.delta_kg >= 0 ? '+' : ''}{parseInt(m.delta_kg)} u.
+                {m.delta_kg >= 0 ? '+' : ''}{parseFloat(m.delta_kg).toFixed(2)} kg
               </span>
-              <span className="mono">{parseInt(m.stock_after)} u.</span>
+              <span className="mono">{parseFloat(m.stock_after).toFixed(2)} kg</span>
               <span className="text-muted">{REASON_LABELS[m.reason] ?? m.reason}</span>
               <span className="text-muted" style={{ fontSize: 12 }}>{m.note ?? '—'}</span>
             </div>

@@ -93,7 +93,7 @@ export default function Shop() {
         <div className="container shop-hero-content">
           <div className="section-label section-label-light">Notre sélection</div>
           <h1>La Boutique</h1>
-          <p>Boucherie halal & épicerie orientale</p>
+          <p>Viandes fraîches, sélectionnées et préparées avec soin</p>
         </div>
       </div>
 

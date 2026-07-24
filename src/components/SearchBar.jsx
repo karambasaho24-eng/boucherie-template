@@ -7,7 +7,7 @@ export default function SearchBar({ value, onChange }) {
       <input
         type="search"
         className="search-input"
-        placeholder="Rechercher un plat — mafé, yassa, alloco…"
+        placeholder="Rechercher un produit — bœuf, agneau, volaille…"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />

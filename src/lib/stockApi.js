@@ -127,14 +127,14 @@ export async function fetchStockMovements(productId = null, limit = 50) {
  * Crée une demande de réservation (côté client).
  * Vérifie en amont que la quantité demandée ne dépasse pas le stock disponible.
  */
-export async function createReservation({ productId, customerName, phone, quantity, note }) {
+export async function createReservation({ productId, customerName, phone, quantityKg, note }) {
   // 1. Vérifier la disponibilité
   const availableKg = await getAvailableStock(productId)
-  if (availableKg !== null && quantity > availableKg) {
+  if (availableKg !== null && quantityKg > availableKg) {
     const err = new Error(
       availableKg === 0
         ? 'Ce produit n\'est plus disponible à la réservation.'
-        : `Seulement ${availableKg} kg disponible(s) à la réservation.`
+        : `Seulement ${availableKg.toFixed(2)} kg sont disponibles à la réservation.`
     )
     err.code = 'STOCK_EXCEEDED'
     err.availableKg = availableKg
@@ -148,7 +148,7 @@ export async function createReservation({ productId, customerName, phone, quanti
       product_id: productId,
       customer_name: customerName,
       phone,
-      quantity: quantity,
+      quantity_kg: quantityKg,
       note,
       status: 'pending',
     })
@@ -194,8 +194,8 @@ export async function acceptReservation(reservationId) {
     ? Math.max(product.stock_kg - product.stock_reserved_kg, 0)
     : Infinity
 
-  if (product.stock_enabled && res.quantity > availableKg) {
-    throw new Error(`Stock insuffisant : ${availableKg} kg disponible(s), ${res.quantity} demandée(s).`)
+  if (product.stock_enabled && res.quantity_kg > availableKg) {
+    throw new Error(`Stock insuffisant : ${availableKg.toFixed(2)} kg disponibles, ${res.quantity_kg} kg demandés.`)
   }
 
   // 3. Accepter la réservation (le trigger retire la quantité de stock_reserved_kg)
@@ -209,7 +209,7 @@ export async function acceptReservation(reservationId) {
 
   // 4. Décrémenter le stock physique si activé
   if (product.stock_enabled) {
-    const newStock = Math.max(product.stock_kg - res.quantity, 0)
+    const newStock = Math.max(product.stock_kg - res.quantity_kg, 0)
     const { error: stockErr } = await supabase
       .from('products')
       .update({ stock_kg: newStock })
@@ -219,7 +219,7 @@ export async function acceptReservation(reservationId) {
     // 5. Enregistrer le mouvement
     await supabase.from('stock_movements').insert({
       product_id: res.product_id,
-      delta_kg: -res.quantity,
+      delta_kg: -res.quantity_kg,
       stock_after: newStock,
       reason: 'reservation_accept',
       reference_id: reservationId,

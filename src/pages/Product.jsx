@@ -64,6 +64,7 @@ export default function Product() {
             ) : (
               <span className="price-new">{product.price.toFixed(2)} €</span>
             )}
+            <span className="price-unit">/ kg</span>
           </div>
 
           <div className="qty-row">

@@ -4,7 +4,7 @@ import { useCart } from '../hooks/useCart'
 import { createOrder } from '../lib/api'
 import { rememberActiveOrder } from '../components/OrderReminder'
 
-const CUSTOMER_STORAGE_KEY = 'africa_food_customer'
+const CUSTOMER_STORAGE_KEY = 'boucherie_customer'
 
 function isValidPhone(phone) {
   const cleaned = phone.replace(/[\s.\-]/g, '')
@@ -165,13 +165,13 @@ export default function Cart({ config }) {
                 </div>
                 <div className="cart-item-info">
                   <p className="cart-item-name">{item.name}</p>
-                  <p className="text-muted">{item.price.toFixed(2)} €</p>
+                  <p className="text-muted">{item.price.toFixed(2)} € / kg</p>
                 </div>
                 <div className="cart-item-actions">
                   <div className="qty-controls">
-                    <button onClick={() => updateQty(item.id, item.qty - 1)} aria-label="Diminuer">−</button>
-                    <span>{item.qty}</span>
-                    <button onClick={() => updateQty(item.id, item.qty + 1)} aria-label="Augmenter">+</button>
+                    <button onClick={() => updateQty(item.id, item.qty - 0.5)} aria-label="Diminuer">−</button>
+                    <span>{item.qty} kg</span>
+                    <button onClick={() => updateQty(item.id, item.qty + 0.5)} aria-label="Augmenter">+</button>
                   </div>
                   <p className="item-total">{(item.price * item.qty).toFixed(2)} €</p>
                   <button className="remove-btn" onClick={() => removeItem(item.id)} aria-label="Retirer">✕</button>
@@ -201,7 +201,7 @@ export default function Cart({ config }) {
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
                     <path d="M3 9l9-6 9 6v11a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1z"/>
                   </svg>
-                  <span>Retrait directement à la boutique — {config?.address || '77 Rue Voltaire, 72000 Le Mans'}</span>
+                  <span>Retrait directement à la boutique — {config?.address || 'adresse communiquée après commande'}</span>
                 </div>
               )}
 

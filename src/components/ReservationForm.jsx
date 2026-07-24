@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { createReservation } from '../lib/stockApi'
 
 export default function ReservationForm({ product, onSuccess, onClose }) {
-  const [form, setForm] = useState({ customer_name: '', phone: '', quantity: '', note: '' })
+  const [form, setForm] = useState({ customer_name: '', phone: '', quantity_kg: '', note: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
@@ -25,13 +25,13 @@ export default function ReservationForm({ product, onSuccess, onClose }) {
 
     if (!form.customer_name.trim()) return setError('Veuillez indiquer votre nom.')
     if (!form.phone.trim()) return setError('Veuillez indiquer votre téléphone.')
-    const qty = parseInt(form.quantity, 10)
+    const qty = parseFloat(form.quantity_kg)
     if (!qty || qty <= 0) return setError('Veuillez indiquer une quantité valide.')
     if (availableKg !== null && qty > availableKg) {
       return setError(
         availableKg <= 0
           ? 'Ce produit n\'est plus disponible à la réservation.'
-          : `Seulement ${availableKg} kg disponible(s). Veuillez réduire la quantité.`
+          : `Seulement ${availableKg.toFixed(2)} kg disponibles. Veuillez réduire la quantité.`
       )
     }
 
@@ -41,7 +41,7 @@ export default function ReservationForm({ product, onSuccess, onClose }) {
         productId: product.id,
         customerName: form.customer_name.trim(),
         phone: form.phone.trim(),
-        quantity: qty,
+        quantityKg: qty,
         note: form.note.trim() || null,
       })
       setSuccess(true)
@@ -68,7 +68,7 @@ export default function ReservationForm({ product, onSuccess, onClose }) {
         <h3>Réservation envoyée</h3>
         <p>
           Votre demande de réservation pour <strong>{product.name}</strong> a bien été enregistrée.
-          Le restaurant vous contactera pour confirmer.
+          La boucherie vous contactera pour confirmer.
         </p>
         {onClose && (
           <button className="btn btn-primary" onClick={onClose}>Fermer</button>
@@ -91,7 +91,7 @@ export default function ReservationForm({ product, onSuccess, onClose }) {
         <p className="res-available">
           <span className="res-dot" />
           {availableKg > 0
-            ? `${availableKg} kg disponible(s) à la réservation`
+            ? `${availableKg.toFixed(2)} kg disponibles à la réservation`
             : 'Plus de stock disponible à la réservation'}
         </p>
       )}
@@ -118,17 +118,17 @@ export default function ReservationForm({ product, onSuccess, onClose }) {
         />
       </div>
       <div className="field">
-        <label>Quantité souhaitée *</label>
+        <label>Quantité souhaitée (kg) *</label>
         <input
           className="input"
-          name="quantity"
+          name="quantity_kg"
           type="number"
-          min="1"
-          step="1"
+          min="0.1"
+          step="0.1"
           max={availableKg ?? undefined}
-          value={form.quantity}
+          value={form.quantity_kg}
           onChange={handleField}
-          placeholder="Ex : 2"
+          placeholder="Ex : 2.5"
         />
       </div>
       <div className="field">

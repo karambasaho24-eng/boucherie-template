@@ -24,7 +24,7 @@ function PublicLayout({ config }) {
   return (
     <>
       <OrderReminder />
-      <Navbar siteTitle={config?.site_title} logoUrl={config?.logo_url} />
+      <Navbar siteTitle={config?.site_title} logoUrl={config?.logo_url} subtitle={config?.about_title} />
       <main className="main-content">
         <Outlet />
       </main>

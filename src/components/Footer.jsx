@@ -16,7 +16,7 @@ export default function Footer({ config }) {
               )}
             </span>
             <h3>{config?.site_title || "Ma Boucherie"}</h3>
-            <p>Restaurant africain & cuisine faite maison au cœur des Sablons, Le Mans</p>
+            <p>{config?.about_title ? `${config.about_title} — boucherie artisanale` : 'Boucherie artisanale, viandes fraîches et fait maison'}</p>
             <div className="footer-certif">
               <span>Fait maison</span>
               <span>Vente directe</span>
@@ -26,9 +26,9 @@ export default function Footer({ config }) {
           <div className="footer-col">
             <h4>Informations</h4>
             <ul>
-              <li>{config?.address || '77 Rue Voltaire, 72000 Le Mans'}</li>
-              <li><a href={`tel:${(config?.phone || '0662428596').replace(/\s/g,'')}`}>{config?.phone || '06 62 42 85 96'}</a></li>
-              <li>{config?.opening_hours || 'Horaires : voir avec le restaurant'}</li>
+              <li>{config?.address || 'adresse communiquée après commande'}</li>
+              {config?.phone && <li><a href={`tel:${config.phone.replace(/\s/g,'')}`}>{config.phone}</a></li>}
+              <li>{config?.opening_hours || 'Horaires communiqués sur demande'}</li>
               {config?.email && <li><a href={`mailto:${config.email}`}>{config.email}</a></li>}
               {config?.siret && <li>SIRET {config.siret}</li>}
             </ul>

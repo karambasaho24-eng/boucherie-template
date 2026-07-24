@@ -97,7 +97,7 @@ export default function AdminProducts() {
 
   async function handleSave() {
     if (!form.name.trim() || !form.price) { setError('Nom et prix obligatoires.'); return }
-    if (form.stock_enabled && form.stock_kg === '') { setError('Indiquez un stock en unités.'); return }
+    if (form.stock_enabled && form.stock_kg === '') { setError('Indiquez un stock en kg.'); return }
 
     setSaving(true)
     setError('')
@@ -166,7 +166,7 @@ export default function AdminProducts() {
             </div>
             <div className="form-row">
               <div className="field">
-                <label>Prix (€) *</label>
+                <label>Prix (€/kg) *</label>
                 <input className="input" type="number" min="0" step="0.01" value={form.price} onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))} />
               </div>
               <div className="field">
@@ -176,7 +176,7 @@ export default function AdminProducts() {
             </div>
             <div className="field">
               <label>Catégorie</label>
-              <input className="input" value={form.category} onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))} placeholder="Plats, Boissons, Desserts..." />
+              <input className="input" value={form.category} onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))} placeholder="Bœuf, Agneau, Épicerie..." />
             </div>
             <div className="field">
               <label>Image</label>
@@ -211,33 +211,33 @@ export default function AdminProducts() {
                 checked={form.stock_enabled}
                 onChange={(e) => setForm((f) => ({ ...f, stock_enabled: e.target.checked }))}
               />
-              <label htmlFor="stock_enabled" className="field-row-label">Activer la gestion de stock (par unité)</label>
+              <label htmlFor="stock_enabled" className="field-row-label">Activer la gestion de stock au kilo</label>
             </div>
 
             {form.stock_enabled && (
               <div className="form-row">
                 <div className="field">
-                  <label>Stock disponible (unités)</label>
+                  <label>Stock disponible (kg)</label>
                   <input
                     className="input"
                     type="number"
                     min="0"
-                    step="1"
+                    step="0.1"
                     value={form.stock_kg}
                     onChange={(e) => setForm((f) => ({ ...f, stock_kg: e.target.value }))}
-                    placeholder="ex : 15"
+                    placeholder="ex : 15.0"
                   />
                 </div>
                 <div className="field">
-                  <label>Seuil d'alerte (unités)</label>
+                  <label>Seuil d'alerte (kg)</label>
                   <input
                     className="input"
                     type="number"
                     min="0"
-                    step="1"
+                    step="0.1"
                     value={form.stock_alert_kg}
                     onChange={(e) => setForm((f) => ({ ...f, stock_alert_kg: e.target.value }))}
-                    placeholder="ex : 2"
+                    placeholder="ex : 2.0"
                   />
                 </div>
               </div>
@@ -281,10 +281,10 @@ export default function AdminProducts() {
           {products.map((p) => {
             const mode = p.availability_mode ?? (p.is_available ? 'available' : 'disabled')
             const modeConfig = AVAILABILITY_MODES.find((m) => m.value === mode)
-            const availQty = p.stock_enabled
+            const availKg = p.stock_enabled
               ? Math.max((p.stock_kg ?? 0) - (p.stock_reserved_kg ?? 0), 0)
               : null
-            const isLow = p.stock_enabled && availQty !== null && availQty <= (p.stock_alert_kg ?? 1)
+            const isLow = p.stock_enabled && availKg !== null && availKg <= (p.stock_alert_kg ?? 1)
 
             return (
               <div key={p.id} className="product-row">
@@ -310,7 +310,7 @@ export default function AdminProducts() {
                 <span>
                   {p.stock_enabled ? (
                     <span className={`stock-pill ${isLow ? 'stock-low' : ''}`}>
-                      {availQty} kg
+                      {availKg?.toFixed(2)} kg
                       {isLow && ' ⚠'}
                     </span>
                   ) : (

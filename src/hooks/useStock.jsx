@@ -15,7 +15,7 @@ import { supabase } from '../lib/supabaseClient'
  * @returns {{
  *   availableKg: number|null,
  *   isStockManaged: boolean,
- *   canAdd: (qty: number) => boolean,
+ *   canAdd: (qtyKg: number) => boolean,
  *   maxKg: number|null,
  *   stockLabel: string,
  *   stockSeverity: 'ok'|'low'|'empty'|'unavailable'
@@ -38,11 +38,11 @@ export function useStockInfo(product) {
 
   const isStockManaged = !!stock_enabled
 
-  function canAdd(qty = 1) {
+  function canAdd(qtyKg = 1) {
     if (availability_mode === 'disabled' || availability_mode === 'out_of_stock') return false
     if (availability_mode === 'reservation_only') return false
     if (!isStockManaged) return availability_mode === 'available' || availability_mode === 'pickup_only'
-    return qty <= availableKg
+    return qtyKg <= availableKg
   }
 
   function getStockLabel() {
@@ -54,7 +54,7 @@ export function useStockInfo(product) {
       case 'available':
         if (!isStockManaged)    return 'En stock'
         if (availableKg <= 0)   return 'Rupture de stock'
-        if (availableKg <= stock_alert_kg) return `Stock faible — ${availableKg} kg`
+        if (availableKg <= stock_alert_kg) return `Stock faible — ${availableKg.toFixed(2)} kg`
         return 'En stock'
       default:                  return 'Disponible'
     }

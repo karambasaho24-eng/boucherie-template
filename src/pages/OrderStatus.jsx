@@ -23,15 +23,15 @@ function getStatusLabel(status, isDelivery) {
 
 function getStatusDescription(status, isDelivery) {
   const descriptions = {
-    pending:   "Votre commande a bien été enregistrée. Elle est maintenant en attente de validation par le restaurant.",
-    confirmed: "Votre commande a été confirmée par le restaurant. La préparation va débuter.",
-    preparing: "Le restaurant prépare actuellement votre commande. Merci de patienter.",
+    pending:   "Votre commande a bien été enregistrée. Elle est maintenant en attente de validation par la boucherie.",
+    confirmed: "Votre commande a été confirmée par la boucherie. La préparation va débuter.",
+    preparing: "La boucherie prépare actuellement votre commande. Merci de patienter.",
     ready:     isDelivery
       ? "Votre commande est prête et va être livrée à l'adresse indiquée."
-      : "Votre commande est prête ! Vous pouvez venir la récupérer au restaurant.",
+      : "Votre commande est prête ! Vous pouvez venir la récupérer à la boucherie.",
     paid:      "Votre paiement a bien été reçu. Merci pour votre confiance !",
     completed: "Cette commande est terminée. Merci pour votre confiance !",
-    refused:   "Cette commande a été refusée par le restaurant. Contactez-nous pour plus d'informations.",
+    refused:   "Cette commande a été refusée par la boucherie. Contactez-nous pour plus d'informations.",
     cancelled: "Cette commande a été annulée.",
   }
   return descriptions[status]
@@ -42,12 +42,12 @@ function getStatusAlert(status, isDelivery) {
     pending: {
       type: 'warning',
       text: isDelivery
-        ? "Votre commande n'est pas encore confirmée par le restaurant. Merci de patienter."
-        : "N'allez pas récupérer votre commande avant d'avoir reçu la confirmation du restaurant. Merci de patienter.",
+        ? "Votre commande n'est pas encore confirmée par la boucherie. Merci de patienter."
+        : "N'allez pas récupérer votre commande avant d'avoir reçu la confirmation de la boucherie. Merci de patienter.",
     },
     confirmed: {
       type: 'info',
-      text: "Le restaurant a validé votre commande. La préparation peut prendre un certain temps.",
+      text: "La boucherie a validé votre commande. La préparation peut prendre un certain temps.",
     },
     preparing: {
       type: 'info',
@@ -57,7 +57,7 @@ function getStatusAlert(status, isDelivery) {
       type: 'success',
       text: isDelivery
         ? "Votre commande est prête et va bientôt être livrée !"
-        : "Vous pouvez maintenant venir récupérer votre commande au restaurant !",
+        : "Vous pouvez maintenant venir récupérer votre commande à la boucherie !",
     },
   }
   return alerts[status]
@@ -279,7 +279,7 @@ export default function OrderStatus() {
               )}
               {!canModify && order.status !== 'cancelled' && (
                 <p className="text-muted" style={{ marginTop: 14, fontSize: 13 }}>
-                  Le restaurant a commencé à traiter votre commande, elle ne peut plus être modifiée en ligne. Pour toute question, contactez directement le restaurant.
+                  La boucherie a commencé à traiter votre commande, elle ne peut plus être modifiée en ligne. Pour toute question, contactez directement la boucherie.
                 </p>
               )}
             </>

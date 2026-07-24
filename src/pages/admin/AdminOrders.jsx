@@ -337,7 +337,7 @@ export default function AdminOrders() {
                     {(order.items ?? []).map((item, i) => (
                       <div key={i} className="order-item-line">
                         <span>{item.name}</span>
-                        <span className="text-muted">×{item.qty}</span>
+                        <span className="text-muted">×{item.qty} kg</span>
                         <span className="mono">{(item.price * item.qty).toFixed(2)} €</span>
                       </div>
                     ))}

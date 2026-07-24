@@ -92,9 +92,9 @@ export default function ProductCard({ product }) {
                 max={stockInfo.maxKg ?? undefined}
                 value={qty}
                 onChange={(e) => {
-                  const v = parseInt(e.target.value, 10)
+                  const v = parseFloat(e.target.value)
                   if (!isNaN(v) && v > 0) {
-                    setQty(v)
+                    setQty(parseFloat(v.toFixed(2)))
                     setStockError('')
                   }
                 }}
@@ -102,9 +102,9 @@ export default function ProductCard({ product }) {
               <button
                 className="qty-btn"
                 onClick={() => {
-                  const next = qty + 1
+                  const next = parseFloat((qty + 0.5).toFixed(2))
                   if (stockInfo.maxKg !== null && next > stockInfo.maxKg) {
-                    setStockError(`Maximum disponible : ${stockInfo.maxKg} kg`)
+                    setStockError(`Maximum disponible : ${stockInfo.maxKg.toFixed(2)} kg`)
                     return
                   }
                   setQty(next)
@@ -114,7 +114,7 @@ export default function ProductCard({ product }) {
               >+</button>
             </div>
             {stockInfo.isStockManaged && stockInfo.maxKg !== null && (
-              <p className="qty-max-hint">Max disponible : {stockInfo.maxKg} kg</p>
+              <p className="qty-max-hint">Max disponible : {stockInfo.maxKg.toFixed(2)} kg</p>
             )}
           </div>
         )}
@@ -140,6 +140,7 @@ export default function ProductCard({ product }) {
             ) : (
               <span className="price-new">{product.price.toFixed(2)} €</span>
             )}
+            <span className="price-unit">/ kg</span>
           </div>
 
           {isReservationMode ? (

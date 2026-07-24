@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
-const ACTIVE_ORDER_KEY = 'africa_food_active_order'
+const ACTIVE_ORDER_KEY = 'boucherie_active_order'
 
 export function rememberActiveOrder(orderId) {
   try {
