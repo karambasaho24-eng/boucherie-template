@@ -45,6 +45,22 @@
   --font-mono: 'Space Mono', 'Courier New', monospace;
 }
 
+/* Presets de police sélectionnables depuis l'admin (Configuration du site).
+   Utilisent uniquement des polices déjà chargées (voir index.html + import ci-dessus),
+   donc aucun chargement réseau supplémentaire. */
+[data-font-theme="classic"] {
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-heading: 'Inter', system-ui, sans-serif;
+}
+[data-font-theme="bold"] {
+  --font-display: 'Oswald', sans-serif;
+  --font-heading: 'Oswald', sans-serif;
+}
+[data-font-theme="modern"] {
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Inter', system-ui, sans-serif;
+}
+
 [data-color-theme='red'] {
   --color-red: #b5181f; --color-red-deep: #8c1117; --color-red-light: #d94951;
   --color-ink-fixed: #1a0506; --color-ink-fixed-soft: #2e0c0e;

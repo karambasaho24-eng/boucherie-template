@@ -237,14 +237,14 @@ export default function Home({ config }) {
             <h2 className="section-title">La qualité à chaque étape</h2>
           </div>
           <div className="pillars-grid">
-            {[
-              { n: '01', title: 'Recettes traditionnelles', desc: 'Des plats préparés selon les recettes authentiques d\'Afrique de l\'Ouest, transmises avec soin.' },
-              { n: '02', title: 'Fait maison', desc: 'Chaque sauce, chaque accompagnement est préparé sur place par nos cuisiniers.' },
-              { n: '03', title: 'Sur place ou à emporter', desc: 'Dégustez sur place, à emporter ou en livraison, selon vos envies.' },
-              { n: '04', title: 'Commande simplifiée', desc: 'Commande en ligne et paiement par carte bancaire, en toute simplicité.' },
-            ].map((p, i) => (
+            {(config?.features?.length ? config.features : [
+              { title: 'Sélection rigoureuse', desc: 'Des viandes choisies avec exigence, chaque jour.' },
+              { title: 'Savoir-faire artisanal', desc: 'Découpe et préparation faites main par nos bouchers.' },
+              { title: 'Sur place ou à emporter', desc: 'Retrait en boutique ou livraison, selon vos envies.' },
+              { title: 'Commande simplifiée', desc: 'Commande en ligne et paiement sécurisé, en toute simplicité.' },
+            ]).map((p, i) => (
               <div key={i} className={`pillar-card reveal reveal-delay-${i % 4}`}>
-                <span className="pillar-num">{p.n}</span>
+                <span className="pillar-num">{String(i + 1).padStart(2, '0')}</span>
                 <h3 className="pillar-title">{p.title}</h3>
                 <p className="pillar-desc">{p.desc}</p>
               </div>
@@ -320,16 +320,16 @@ export default function Home({ config }) {
             <h2 className="section-title">Nos spécialités</h2>
           </div>
           <div className="specialties-grid">
-            {[
-              { n: '01', label: 'Thiéboudienne', desc: 'Riz rouge, légumes fondants, poulet ou poisson…' },
-              { n: '02', label: 'Mafé', desc: 'Sauce arachide onctueuse, riz blanc, poulet…' },
-              { n: '03', label: 'Yassa', desc: 'Oignons, citron, moutarde, poulet mariné…' },
-              { n: '04', label: 'Attiéké', desc: 'Semoule de manioc, poisson ou poulet frit…' },
-              { n: '05', label: 'Foutou', desc: 'Banane plantain, sauce graine généreuse…' },
-              { n: '06', label: 'Bissap & gingembre', desc: 'Boissons maison rafraîchissantes' },
-            ].map((s, i) => (
+            {(config?.specialties?.length ? config.specialties : [
+              { label: 'Bavette', desc: 'Tendre et savoureuse, idéale à la poêle.' },
+              { label: 'Entrecôte', desc: 'Persillée, parfaite au grill.' },
+              { label: 'Rôti de bœuf', desc: 'Idéal pour le repas du dimanche.' },
+              { label: 'Merguez maison', desc: 'Épices sélectionnées, préparée sur place.' },
+              { label: 'Poulet fermier', desc: 'Élevé en plein air.' },
+              { label: 'Plateau charcuterie', desc: 'Assortiment artisanal.' },
+            ]).map((s, i) => (
               <div key={i} className={`specialty-item reveal reveal-delay-${i % 3}`}>
-                <span className="specialty-num">{s.n}</span>
+                <span className="specialty-num">{String(i + 1).padStart(2, '0')}</span>
                 <span className="specialty-label">{s.label}</span>
                 <span className="specialty-desc">{s.desc}</span>
               </div>

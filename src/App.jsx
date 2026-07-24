@@ -51,6 +51,14 @@ export default function App() {
   }, [config?.theme_color])
 
   useEffect(() => {
+    if (!config?.font_theme || config.font_theme === 'elegant') {
+      document.documentElement.removeAttribute('data-font-theme')
+    } else {
+      document.documentElement.setAttribute('data-font-theme', config.font_theme)
+    }
+  }, [config?.font_theme])
+
+  useEffect(() => {
     if (!config?.favicon_url) return
     let link = document.querySelector("link[rel~='icon']")
     if (!link) {

@@ -15,6 +15,16 @@ const THEME_COLORS = [
   { id: 'terracotta', label: 'Terracotta',        swatch: '#b4502f' },
 ]
 
+const FONT_THEMES = [
+  { id: 'elegant', label: 'Élégant', sample: 'Fraunces', font: "'Fraunces', Georgia, serif" },
+  { id: 'classic', label: 'Classique', sample: 'Playfair Display', font: "'Playfair Display', Georgia, serif" },
+  { id: 'bold',    label: 'Impact', sample: 'Oswald', font: "'Oswald', sans-serif" },
+  { id: 'modern',  label: 'Moderne', sample: 'Inter', font: "'Inter', system-ui, sans-serif" },
+]
+
+const EMPTY_FEATURE = { title: '', desc: '' }
+const EMPTY_SPECIALTY = { label: '', desc: '' }
+
 export default function AdminConfig() {
   const [config, setConfig] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -92,6 +102,35 @@ export default function AdminConfig() {
     }
   }
 
+  function handleFontThemeChange(fontId) {
+    setConfig((c) => ({ ...c, font_theme: fontId }))
+    if (fontId === 'elegant') {
+      document.documentElement.removeAttribute('data-font-theme')
+    } else {
+      document.documentElement.setAttribute('data-font-theme', fontId)
+    }
+  }
+
+  function updateListItem(key, index, field, value) {
+    setConfig((c) => {
+      const list = [...(c[key] || [])]
+      list[index] = { ...list[index], [field]: value }
+      return { ...c, [key]: list }
+    })
+  }
+
+  function addListItem(key, empty) {
+    setConfig((c) => ({ ...c, [key]: [...(c[key] || []), { ...empty }] }))
+  }
+
+  function removeListItem(key, index) {
+    setConfig((c) => {
+      const list = [...(c[key] || [])]
+      list.splice(index, 1)
+      return { ...c, [key]: list }
+    })
+  }
+
   async function handleSave() {
     setSaving(true)
     setError('')
@@ -121,6 +160,9 @@ export default function AdminConfig() {
         ubereats_enabled: config.ubereats_enabled ?? false,
         ubereats_url: config.ubereats_url ?? '',
         site_url: config.site_url ?? '',
+        font_theme: config.font_theme || 'elegant',
+        features: (config.features || []).filter((f) => f.title?.trim() || f.desc?.trim()),
+        specialties: (config.specialties || []).filter((s) => s.label?.trim() || s.desc?.trim()),
       })
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)
@@ -260,6 +302,86 @@ export default function AdminConfig() {
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="config-block">
+          <h4>Police du site</h4>
+          <p className="text-muted" style={{ fontSize: 12.5, marginTop: -6, marginBottom: 14 }}>
+            Change le style typographique des titres sur tout le site.
+          </p>
+          <div className="theme-swatches">
+            {FONT_THEMES.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                className={`theme-swatch-btn${(config.font_theme || 'elegant') === f.id ? ' active' : ''}`}
+                onClick={() => handleFontThemeChange(f.id)}
+                title={f.label}
+              >
+                <span className="theme-swatch-label" style={{ fontFamily: f.font, fontSize: 15 }}>
+                  {f.label}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="config-block">
+          <h4>Nos engagements</h4>
+          <p className="text-muted" style={{ fontSize: 12.5, marginTop: -6, marginBottom: 14 }}>
+            Les 4 points affichés dans la section "La qualité à chaque étape". Laissez vide pour garder les valeurs par défaut.
+          </p>
+          {(config.features || []).map((f, i) => (
+            <div key={i} className="field" style={{ border: '1px solid var(--border)', borderRadius: 10, padding: 12, marginBottom: 10 }}>
+              <input
+                className="input" style={{ marginBottom: 8 }}
+                placeholder="Titre (ex : Sélection rigoureuse)"
+                value={f.title || ''}
+                onChange={(e) => updateListItem('features', i, 'title', e.target.value)}
+              />
+              <textarea
+                className="textarea" rows={2}
+                placeholder="Description"
+                value={f.desc || ''}
+                onChange={(e) => updateListItem('features', i, 'desc', e.target.value)}
+              />
+              <button type="button" className="btn btn-ghost" style={{ marginTop: 8 }} onClick={() => removeListItem('features', i)}>
+                Supprimer
+              </button>
+            </div>
+          ))}
+          <button type="button" className="btn btn-outline" onClick={() => addListItem('features', EMPTY_FEATURE)}>
+            + Ajouter un engagement
+          </button>
+        </div>
+
+        <div className="config-block">
+          <h4>Nos spécialités</h4>
+          <p className="text-muted" style={{ fontSize: 12.5, marginTop: -6, marginBottom: 14 }}>
+            Vos produits phares, affichés dans la section "Nos spécialités". Laissez vide pour garder les valeurs par défaut.
+          </p>
+          {(config.specialties || []).map((s, i) => (
+            <div key={i} className="field" style={{ border: '1px solid var(--border)', borderRadius: 10, padding: 12, marginBottom: 10 }}>
+              <input
+                className="input" style={{ marginBottom: 8 }}
+                placeholder="Nom (ex : Bavette)"
+                value={s.label || ''}
+                onChange={(e) => updateListItem('specialties', i, 'label', e.target.value)}
+              />
+              <textarea
+                className="textarea" rows={2}
+                placeholder="Description"
+                value={s.desc || ''}
+                onChange={(e) => updateListItem('specialties', i, 'desc', e.target.value)}
+              />
+              <button type="button" className="btn btn-ghost" style={{ marginTop: 8 }} onClick={() => removeListItem('specialties', i)}>
+                Supprimer
+              </button>
+            </div>
+          ))}
+          <button type="button" className="btn btn-outline" onClick={() => addListItem('specialties', EMPTY_SPECIALTY)}>
+            + Ajouter une spécialité
+          </button>
         </div>
 
         <div className="config-block">
