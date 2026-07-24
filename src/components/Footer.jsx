@@ -16,9 +16,9 @@ export default function Footer({ config }) {
               )}
             </span>
             <h3>{config?.site_title || "Ma Boucherie"}</h3>
-            <p>{config?.about_title ? `${config.about_title} — boucherie artisanale` : 'Boucherie artisanale, viandes fraîches et fait maison'}</p>
+            <p>Boucherie halal & épicerie orientale au cœur des Sablons, Le Mans</p>
             <div className="footer-certif">
-              <span>Fait maison</span>
+              <span>Halal certifié</span>
               <span>Vente directe</span>
             </div>
           </div>
@@ -27,10 +27,8 @@ export default function Footer({ config }) {
             <h4>Informations</h4>
             <ul>
               <li>{config?.address || 'adresse communiquée après commande'}</li>
-              {config?.phone && <li><a href={`tel:${config.phone.replace(/\s/g,'')}`}>{config.phone}</a></li>}
-              <li>{config?.opening_hours || 'Horaires communiqués sur demande'}</li>
-              {config?.email && <li><a href={`mailto:${config.email}`}>{config.email}</a></li>}
-              {config?.siret && <li>SIRET {config.siret}</li>}
+              <li><a href={`tel:${(config?.phone || '').replace(/\s/g,'')}`}>{config?.phone || ''}</a></li>
+              <li>{config?.opening_hours || 'Lun–Sam 09:30–19:30'}</li>
             </ul>
           </div>
 

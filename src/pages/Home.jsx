@@ -73,10 +73,6 @@ export default function Home({ config }) {
   const tiltRef = useMouseTilt()
 
   useEffect(() => {
-    document.title = config?.site_title || "Ma Boucherie"
-  }, [config?.site_title])
-
-  useEffect(() => {
     let cancelled = false
 
     const safetyTimer = setTimeout(() => {
@@ -129,7 +125,7 @@ export default function Home({ config }) {
     return () => { supabase.removeChannel(channel) }
   }, [])
 
-  const phoneClean = (config?.phone || '0662428596').replace(/\s/g, '')
+  const phoneClean = (config?.phone || '').replace(/\s/g, '')
 
   return (
     <div className="home-page">
@@ -144,7 +140,7 @@ export default function Home({ config }) {
         </div>
 
         <div className="hero-topline">
-          <span className="hero-eyebrow">{config?.about_title || 'Boucherie artisanale'}</span>
+          <span className="hero-eyebrow">Établissement artisan · Le Mans</span>
           <span className="hero-eyebrow hero-eyebrow-right"></span>
         </div>
 
@@ -153,47 +149,37 @@ export default function Home({ config }) {
             <svg viewBox="0 0 200 200" className="stamp-svg">
               <circle cx="100" cy="100" r="92" fill="none" stroke="currentColor" strokeWidth="1" />
               <circle cx="100" cy="100" r="80" fill="none" strokeWidth="0.6" stroke="currentColor" strokeDasharray="2 4" />
-              <text x="100" y="40" textAnchor="middle" className="stamp-text-top">SAVEURS · TRADITION · MAISON</text>
+              <text x="100" y="40" textAnchor="middle" className="stamp-text-top">QUALITÉ · HALAL · FRAÎCHEUR</text>
               <text x="100" y="168" textAnchor="middle" className="stamp-text-bottom"></text>
             </svg>
           </div>
 
           <h1 className="hero-title">
-            <span className="hero-title-line">{config?.site_title || 'Ma Boucherie'}</span>
+            <span className="hero-title-line">BOUCHE<span className="hero-title-accent">R</span>IE</span>
             <span className="hero-title-rule" />
-            <span className="hero-title-sub">{config?.hero_title || ''}</span>
+            <span className="hero-title-sub">{config?.hero_title || "Tradisud Halal"}</span>
           </h1>
 
           <p className="hero-subtitle">
-            {config?.hero_subtitle || 'Viandes fraîches et préparations artisanales, sélectionnées avec exigence chaque jour.'}
+            {config?.hero_subtitle || 'Charcuterie & rôtisserie halal artisanales — découpées sur place, chaque jour.'}
           </p>
 
           <div className="hero-actions">
             <Link to="/boutique" className="btn btn-primary hero-btn-main">
-              Découvrir le menu
+              Découvrir la boutique
             </Link>
-            {config?.ubereats_enabled && config?.ubereats_url && (
-              <a
-                href={config.ubereats_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn hero-btn-ubereats"
-              >
-                Commander sur Uber Eats
-              </a>
-            )}
             <a href={`tel:${phoneClean}`} className="hero-call">
               <span className="hero-call-dot" />
-              {config?.phone || '06 62 42 85 96'}
+              {config?.phone || ''}
             </a>
           </div>
         </div>
 
         <div className="hero-bottomline">
           <div className="hero-badges-row">
-            <span>Fait maison</span>
+            <span>Halal certifié</span>
             <span>Vente directe</span>
-            <span>Recettes traditionnelles</span>
+            <span>Découpe artisanale</span>
           </div>
           <div className="hero-scroll-hint">
             <span className="hero-scroll-track"><span className="hero-scroll-dot" /></span>
@@ -216,14 +202,14 @@ export default function Home({ config }) {
             <span className="info-index">02</span>
             <div>
               <div className="info-label">Horaires</div>
-              <div className="info-value">{config?.opening_hours || 'Voir avec le restaurant'}</div>
+              <div className="info-value">{config?.opening_hours || 'Lun–Sam · 09:30 – 19:30'}</div>
             </div>
           </div>
           <div className="info-item reveal reveal-delay-2">
             <span className="info-index">03</span>
             <div>
               <div className="info-label">Certification</div>
-              <div className="info-value">Cuisine faite maison & vente directe</div>
+              <div className="info-value">100 % Halal & vente directe</div>
             </div>
           </div>
         </div>
@@ -237,14 +223,14 @@ export default function Home({ config }) {
             <h2 className="section-title">La qualité à chaque étape</h2>
           </div>
           <div className="pillars-grid">
-            {(config?.features?.length ? config.features : [
-              { title: 'Sélection rigoureuse', desc: 'Des viandes choisies avec exigence, chaque jour.' },
-              { title: 'Savoir-faire artisanal', desc: 'Découpe et préparation faites main par nos bouchers.' },
-              { title: 'Sur place ou à emporter', desc: 'Retrait en boutique ou livraison, selon vos envies.' },
-              { title: 'Commande simplifiée', desc: 'Commande en ligne et paiement sécurisé, en toute simplicité.' },
-            ]).map((p, i) => (
+            {[
+              { n: '01', title: 'Viandes sélectionnées', desc: 'Bœuf, agneau et volaille choisis avec soin auprès de fournisseurs de confiance.' },
+              { n: '02', title: 'Découpe artisanale', desc: 'Chaque pièce est préparée sur place par nos bouchers expérimentés.' },
+              { n: '03', title: 'Rôtisserie fraîche', desc: 'Poulets, merguez et spécialités grillées chaque jour pour emporter.' },
+              { n: '04', title: 'Halal certifié', desc: 'Toutes nos viandes sont halal, rigoureusement sélectionnées et tracées.' },
+            ].map((p, i) => (
               <div key={i} className={`pillar-card reveal reveal-delay-${i % 4}`}>
-                <span className="pillar-num">{String(i + 1).padStart(2, '0')}</span>
+                <span className="pillar-num">{p.n}</span>
                 <h3 className="pillar-title">{p.title}</h3>
                 <p className="pillar-desc">{p.desc}</p>
               </div>
@@ -303,7 +289,7 @@ export default function Home({ config }) {
             <h2 className="ambiance-title">{config?.about_title || 'Notre histoire'}</h2>
             <p className="ambiance-text">
               {config?.about_text ||
-                "Depuis notre boucherie, nous sélectionnons chaque pièce avec exigence et la travaillons à la main, dans le respect des traditions et du savoir-faire artisanal."}
+                "Installée au cœur des Sablons au Mans, la Boucherie Tradisud Halal vous accueille chaque jour avec des produits frais, une découpe soignée et le sourire. Notre passion : vous offrir la meilleure viande halal au meilleur prix."}
             </p>
             <a href={`tel:${phoneClean}`} className="btn btn-outline" style={{ marginTop: 28 }}>
               Nous appeler
@@ -316,20 +302,20 @@ export default function Home({ config }) {
       <section className="specialties-section">
         <div className="container">
           <div className="reveal section-head">
-            <div className="section-label">Notre carte</div>
-            <h2 className="section-title">Nos spécialités</h2>
+            <div className="section-label">Nos spécialités</div>
+            <h2 className="section-title">Épicerie & rôtisserie orientale</h2>
           </div>
           <div className="specialties-grid">
-            {(config?.specialties?.length ? config.specialties : [
-              { label: 'Bavette', desc: 'Tendre et savoureuse, idéale à la poêle.' },
-              { label: 'Entrecôte', desc: 'Persillée, parfaite au grill.' },
-              { label: 'Rôti de bœuf', desc: 'Idéal pour le repas du dimanche.' },
-              { label: 'Merguez maison', desc: 'Épices sélectionnées, préparée sur place.' },
-              { label: 'Poulet fermier', desc: 'Élevé en plein air.' },
-              { label: 'Plateau charcuterie', desc: 'Assortiment artisanal.' },
-            ]).map((s, i) => (
+            {[
+              { n: '01', label: 'Bœuf', desc: 'Côtes, steaks, mincés…' },
+              { n: '02', label: 'Agneau', desc: 'Gigot, côtelettes, épaule…' },
+              { n: '03', label: 'Volaille', desc: 'Poulet entier, cuisses, ailes…' },
+              { n: '04', label: 'Merguez', desc: 'Fraîches, maison, épicées…' },
+              { n: '05', label: 'Épicerie', desc: 'Produits orientaux sélectionnés' },
+              { n: '06', label: 'Rôtisserie', desc: 'Poulets rôtis, brochettes…' },
+            ].map((s, i) => (
               <div key={i} className={`specialty-item reveal reveal-delay-${i % 3}`}>
-                <span className="specialty-num">{String(i + 1).padStart(2, '0')}</span>
+                <span className="specialty-num">{s.n}</span>
                 <span className="specialty-label">{s.label}</span>
                 <span className="specialty-desc">{s.desc}</span>
               </div>
@@ -462,24 +448,6 @@ export default function Home({ config }) {
         }
         .hero-btn-main { border-color: var(--color-on-ink-fixed); background: var(--color-on-ink-fixed); color: var(--color-ink-fixed); }
         .hero-btn-main:hover { background: transparent; color: var(--color-on-ink-fixed); }
-        .hero-btn-ubereats {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          padding: 13px 28px;
-          border: 1px solid #06C167;
-          border-radius: 999px;
-          background: #06C167;
-          color: #0a0a0a;
-          font-family: var(--font-mono);
-          font-size: 12px;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          text-decoration: none;
-          transition: opacity 0.2s ease;
-        }
-        .hero-btn-ubereats:hover { opacity: 0.85; }
         .hero-call {
           display: inline-flex;
           align-items: center;

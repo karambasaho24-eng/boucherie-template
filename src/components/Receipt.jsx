@@ -45,7 +45,7 @@ function ReceiptVisual({ order, shopName }) {
       }}
     >
       <div style={{ textAlign: 'center', marginBottom: 16 }}>
-        <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: 1 }}>{(shopName || 'MA BOUCHERIE').toUpperCase()}</div>
+        <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: 1 }}>{(shopName || 'BOUCHERIE').toUpperCase()}</div>
         <div style={{ fontSize: 11, marginTop: 4, color: '#444' }}>TICKET DE COMMANDE</div>
       </div>
 

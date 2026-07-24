@@ -30,7 +30,7 @@ function LogoTitle({ title }) {
   )
 }
 
-export default function Navbar({ siteTitle, logoUrl, subtitle }) {
+export default function Navbar({ siteTitle, logoUrl }) {
   const { count } = useCart()
 
   return (
@@ -50,7 +50,7 @@ export default function Navbar({ siteTitle, logoUrl, subtitle }) {
           </span>
           <div className="navbar-logo-text">
             <LogoTitle title={siteTitle} />
-            <span className="navbar-logo-sub">{subtitle || 'Boucherie artisanale'}</span>
+            <span className="navbar-logo-sub">Boucherie · Halal</span>
           </div>
         </Link>
 

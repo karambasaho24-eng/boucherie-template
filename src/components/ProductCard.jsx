@@ -69,12 +69,13 @@ export default function ProductCard({ product }) {
 
       {/* Corps */}
       <div className="product-body">
+        <div className="product-halal-dot">Halal</div>
         <h3 className="product-name">{product.name}</h3>
         {product.description && (
           <p className="product-desc">{product.description}</p>
         )}
 
-        {/* Sélecteur de quantité si gestion de stock */}
+        {/* Sélecteur de quantité si gestion de stock au kg */}
         {product.stock_enabled && !isUnavailable && !isReservationMode && (
           <div className="qty-selector">
             <label className="qty-label">Quantité (kg)</label>
@@ -223,6 +224,7 @@ export default function ProductCard({ product }) {
         .product-category-pill { position: absolute; bottom: 12px; left: 12px; background: var(--color-paper); color: var(--color-ink); font-family: var(--font-mono); font-size: 9.5px; font-weight: 700; padding: 4px 10px; letter-spacing: 1px; text-transform: uppercase; }
         .stock-badge-overlay { position: absolute; top: 12px; right: 12px; }
         .product-body { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .product-halal-dot { font-family: var(--font-mono); font-size: 10px; font-weight: 700; color: var(--color-red); text-transform: uppercase; letter-spacing: 1.5px; }
         .product-name { margin: 4px 0 0; font-family: var(--font-heading); font-size: 17px; font-weight: 700; letter-spacing: -0.2px; color: var(--color-text); line-height: 1.3; }
         .product-desc { font-size: 12.5px; margin: 0; color: var(--color-text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; }
         .qty-selector { margin: 8px 0 4px; }

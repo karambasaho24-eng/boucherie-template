@@ -24,7 +24,7 @@ function PublicLayout({ config }) {
   return (
     <>
       <OrderReminder />
-      <Navbar siteTitle={config?.site_title} logoUrl={config?.logo_url} subtitle={config?.about_title} />
+      <Navbar siteTitle={config?.site_title} logoUrl={config?.logo_url} />
       <main className="main-content">
         <Outlet />
       </main>
@@ -49,14 +49,6 @@ export default function App() {
       document.documentElement.setAttribute('data-color-theme', config.theme_color)
     }
   }, [config?.theme_color])
-
-  useEffect(() => {
-    if (!config?.font_theme || config.font_theme === 'elegant') {
-      document.documentElement.removeAttribute('data-font-theme')
-    } else {
-      document.documentElement.setAttribute('data-font-theme', config.font_theme)
-    }
-  }, [config?.font_theme])
 
   useEffect(() => {
     if (!config?.favicon_url) return

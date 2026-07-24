@@ -18,10 +18,6 @@ export default function Shop() {
   const [search, setSearch] = useState('')
   const [stockFlash, setStockFlash] = useState(null) // id du produit mis à jour
 
-  useEffect(() => {
-    document.title = "Notre carte — Ma Boucherie"
-  }, [])
-
   // Chargement initial
   async function load() {
     try {
@@ -93,7 +89,7 @@ export default function Shop() {
         <div className="container shop-hero-content">
           <div className="section-label section-label-light">Notre sélection</div>
           <h1>La Boutique</h1>
-          <p>Viandes fraîches, sélectionnées et préparées avec soin</p>
+          <p>Viandes fraîches, produits halal &amp; spécialités orientales</p>
         </div>
       </div>
 

@@ -28,7 +28,7 @@ export function CartProvider({ children }) {
    * Vérifie en temps réel si la quantité demandée est disponible.
    * Retourne { ok: true } ou { ok: false, availableKg: number, message: string }
    */
-  async function checkStock(product, qty) {
+  async function checkStock(product, qtyKg) {
     // Si pas de gestion de stock, on vérifie juste le mode de disponibilité
     if (!product.stock_enabled) {
       const mode = product.availability_mode ?? (product.is_available ? 'available' : 'disabled')
@@ -59,7 +59,7 @@ export function CartProvider({ children }) {
     }
 
     const currentInCart = items.find((i) => i.id === product.id)?.qty ?? 0
-    const totalRequestedKg = currentInCart + qty
+    const totalRequestedKg = currentInCart + qtyKg
     const availableKg = Math.max(data.stock_kg - data.stock_reserved_kg, 0)
 
     if (totalRequestedKg > availableKg) {
@@ -110,8 +110,8 @@ export function CartProvider({ children }) {
           price: unitPrice,
           image_url: product.image_url,
           qty,
-          // On mémorise si ce produit a une gestion de stock active
-          is_stock_managed: product.stock_enabled ?? false,
+          // On mémorise si ce produit est vendu au poids
+          is_weight_product: product.stock_enabled ?? false,
         },
       ]
     })

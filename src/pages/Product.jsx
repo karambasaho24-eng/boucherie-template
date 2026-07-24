@@ -15,9 +15,6 @@ export default function Product() {
       .then(({ data, error }) => {
         if (error) throw error
         setProduct(data)
-        if (data?.name) {
-          document.title = `${data.name} — Ma Boucherie`
-        }
       })
       .catch(console.error)
       .finally(() => setLoading(false))
@@ -53,6 +50,7 @@ export default function Product() {
         <div className="product-detail-info">
           {product.category && <span className="product-detail-cat">{product.category}</span>}
           <h1>{product.name}</h1>
+          <span className="product-detail-halal">Halal</span>
           <p className="product-detail-desc">{product.description}</p>
 
           <div className="price-row">
@@ -123,6 +121,16 @@ export default function Product() {
           font-size: clamp(28px, 4vw, 38px);
           margin: 8px 0 6px;
           letter-spacing: -0.5px;
+        }
+        .product-detail-halal {
+          display: inline-block;
+          font-family: var(--font-mono);
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+          color: var(--color-red);
+          margin-bottom: 16px;
         }
         .product-detail-desc { font-size: 15px; color: var(--color-text-muted); line-height: 1.75; margin: 0 0 28px; }
         .price-row { margin: 0 0 28px; display: flex; gap: 10px; align-items: baseline; padding-bottom: 24px; border-bottom: 1px solid var(--color-border); }

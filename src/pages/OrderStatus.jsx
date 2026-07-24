@@ -9,58 +9,41 @@ const STATUS_LABELS = {
   pending: 'En attente',
   confirmed: 'Confirmée',
   preparing: 'En préparation',
-  ready: 'Prête',
+  ready: 'Prête à récupérer',
   paid: 'Payée',
   completed: 'Terminée',
   refused: 'Refusée',
   cancelled: 'Annulée',
 }
 
-function getStatusLabel(status, isDelivery) {
-  if (status === 'ready') return isDelivery ? 'Prête — en cours de livraison' : 'Prête à récupérer'
-  return STATUS_LABELS[status]
+const STATUS_DESCRIPTIONS = {
+  pending:   "Votre commande a bien été enregistrée. Elle est maintenant en attente de validation par la boucherie.",
+  confirmed: "Votre commande a été confirmée par la boucherie. La préparation va débuter.",
+  preparing: "La boucherie prépare actuellement votre commande. Merci de patienter.",
+  ready:     "Votre commande est prête ! Vous pouvez venir la récupérer à la boucherie.",
+  paid:      "Votre paiement a bien été reçu. Merci pour votre confiance !",
+  completed: "Cette commande est terminée. Merci pour votre confiance !",
+  refused:   "Cette commande a été refusée par la boucherie. Contactez-nous pour plus d'informations.",
+  cancelled: "Cette commande a été annulée.",
 }
 
-function getStatusDescription(status, isDelivery) {
-  const descriptions = {
-    pending:   "Votre commande a bien été enregistrée. Elle est maintenant en attente de validation par la boucherie.",
-    confirmed: "Votre commande a été confirmée par la boucherie. La préparation va débuter.",
-    preparing: "La boucherie prépare actuellement votre commande. Merci de patienter.",
-    ready:     isDelivery
-      ? "Votre commande est prête et va être livrée à l'adresse indiquée."
-      : "Votre commande est prête ! Vous pouvez venir la récupérer à la boucherie.",
-    paid:      "Votre paiement a bien été reçu. Merci pour votre confiance !",
-    completed: "Cette commande est terminée. Merci pour votre confiance !",
-    refused:   "Cette commande a été refusée par la boucherie. Contactez-nous pour plus d'informations.",
-    cancelled: "Cette commande a été annulée.",
-  }
-  return descriptions[status]
-}
-
-function getStatusAlert(status, isDelivery) {
-  const alerts = {
-    pending: {
-      type: 'warning',
-      text: isDelivery
-        ? "Votre commande n'est pas encore confirmée par la boucherie. Merci de patienter."
-        : "N'allez pas récupérer votre commande avant d'avoir reçu la confirmation de la boucherie. Merci de patienter.",
-    },
-    confirmed: {
-      type: 'info',
-      text: "La boucherie a validé votre commande. La préparation peut prendre un certain temps.",
-    },
-    preparing: {
-      type: 'info',
-      text: "Votre commande est en cours de préparation. Vous serez averti dès qu'elle sera prête.",
-    },
-    ready: {
-      type: 'success',
-      text: isDelivery
-        ? "Votre commande est prête et va bientôt être livrée !"
-        : "Vous pouvez maintenant venir récupérer votre commande à la boucherie !",
-    },
-  }
-  return alerts[status]
+const STATUS_ALERTS = {
+  pending: {
+    type: 'warning',
+    text: "N'allez pas récupérer votre commande avant d'avoir reçu la confirmation de la boucherie. Merci de patienter.",
+  },
+  confirmed: {
+    type: 'info',
+    text: "La boucherie a validé votre commande. La préparation peut prendre un certain temps.",
+  },
+  preparing: {
+    type: 'info',
+    text: "Votre commande est en cours de préparation. Vous serez averti dès qu'elle sera prête.",
+  },
+  ready: {
+    type: 'success',
+    text: "Vous pouvez maintenant venir récupérer votre commande à la boucherie !",
+  },
 }
 
 export default function OrderStatus() {
@@ -215,14 +198,14 @@ export default function OrderStatus() {
 
       <div className="container order-status-body">
         <div className="status-card">
-          <span className="badge badge-status status-badge-large">{getStatusLabel(order.status, !!order.address)}</span>
-          <p className="status-desc">{getStatusDescription(order.status, !!order.address)}</p>
-          {getStatusAlert(order.status, !!order.address) && (
-            <div className={`status-alert status-alert-${getStatusAlert(order.status, !!order.address).type}`}>
-              {getStatusAlert(order.status, !!order.address).type === 'warning' && '⚠️ '}
-              {getStatusAlert(order.status, !!order.address).type === 'info' && 'ℹ️ '}
-              {getStatusAlert(order.status, !!order.address).type === 'success' && '✅ '}
-              {getStatusAlert(order.status, !!order.address).text}
+          <span className="badge badge-status status-badge-large">{STATUS_LABELS[order.status]}</span>
+          <p className="status-desc">{STATUS_DESCRIPTIONS[order.status]}</p>
+          {STATUS_ALERTS[order.status] && (
+            <div className={`status-alert status-alert-${STATUS_ALERTS[order.status].type}`}>
+              {STATUS_ALERTS[order.status].type === 'warning' && '⚠️ '}
+              {STATUS_ALERTS[order.status].type === 'info' && 'ℹ️ '}
+              {STATUS_ALERTS[order.status].type === 'success' && '✅ '}
+              {STATUS_ALERTS[order.status].text}
             </div>
           )}
         </div>
