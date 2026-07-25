@@ -40,6 +40,20 @@ export default function App() {
 
   useEffect(() => {
     fetchSiteConfig().then(setConfig).catch(console.error)
+
+    // Écoute en temps réel : toute modification faite depuis l'admin
+    // (couleur, police, textes...) se reflète instantanément sur le site,
+    // sans recharger la page — pour tous les visiteurs connectés en même temps.
+    const channel = supabase
+      .channel('site_config_live')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'site_config', filter: 'id=eq.1' },
+        (payload) => setConfig(payload.new)
+      )
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
   }, [])
 
   useEffect(() => {
