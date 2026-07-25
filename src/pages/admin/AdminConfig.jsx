@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { fetchSiteConfig, updateSiteConfig, uploadSiteImage } from '../../lib/api'
+import { fetchSiteConfig, fetchStripeSecrets, updateSiteConfig, uploadSiteImage } from '../../lib/api'
 
 const THEME_COLORS = [
   { id: 'original',   label: 'Original (noir/blanc/rouge)', swatch: '#0a0a0a' },
@@ -28,7 +28,15 @@ export default function AdminConfig() {
 
   useEffect(() => {
     fetchSiteConfig()
-      .then(setConfig)
+      .then((data) => {
+        setConfig(data)
+        // Les clés Stripe sensibles ne sont plus incluses dans fetchSiteConfig
+        // (lecture publique bloquée en base) : on les récupère à part, via une
+        // fonction réservée à l'admin, et on les fusionne dans le formulaire.
+        fetchStripeSecrets()
+          .then((secrets) => setConfig((c) => ({ ...c, ...secrets })))
+          .catch(console.error)
+      })
       .catch(console.error)
       .finally(() => setLoading(false))
   }, [])
@@ -114,6 +122,7 @@ export default function AdminConfig() {
         order_mode: config.order_mode,
         delivery_enabled: config.delivery_enabled ?? false,
         stripe_enabled:         config.stripe_enabled ?? false,
+        auto_status_mode:       config.auto_status_mode ?? false,
         stripe_secret_key:      config.stripe_secret_key ?? '',
         stripe_publishable_key: config.stripe_publishable_key ?? '',
         stripe_webhook_secret:  config.stripe_webhook_secret ?? '',
@@ -256,6 +265,31 @@ export default function AdminConfig() {
                 <span className="theme-swatch-label">{t.label}</span>
               </button>
             ))}
+          </div>
+        </div>
+
+        <div className="config-block">
+          <h4>Confirmation des commandes</h4>
+          <p className="text-muted" style={{ fontSize: 12.5, marginTop: -6, marginBottom: 14 }}>
+            En mode automatique, une commande payée en ligne passe directement au statut "Confirmée"
+            sans que tu aies besoin de le faire toi-même. En mode manuel, tu confirmes chaque commande à la main.
+          </p>
+          <div className="delivery-toggle-row">
+            <div>
+              <p className="delivery-toggle-title">Mode automatique</p>
+              <p className="delivery-toggle-desc">
+                Commandes payées en ligne confirmées automatiquement, sans action de ta part.
+              </p>
+            </div>
+            <label className="toggle-switch">
+              <input
+                type="checkbox"
+                name="auto_status_mode"
+                checked={config.auto_status_mode ?? false}
+                onChange={handleChange}
+              />
+              <span className="toggle-slider" />
+            </label>
           </div>
         </div>
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signOut, fetchSiteConfig } from '../../lib/api'
 import { useAuth } from '../../hooks/useAuth'
+import { useOrderAlerts } from '../../hooks/useOrderAlerts'
 import AdminDashboardStats from './AdminDashboardStats'
 import AdminSnapshots from './AdminSnapshots'
 import AdminProducts from './AdminProducts'
@@ -27,6 +28,9 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchSiteConfig().then(setConfig).catch(console.error)
   }, [])
+
+  const { pushSupported, pushSubscribed, pushBusy, subscribeToPush, unsubscribeFromPush } =
+    useOrderAlerts(config?.vapid_public_key)
 
   async function handleLogout() {
     await signOut()
@@ -61,6 +65,16 @@ export default function AdminDashboard() {
         </nav>
 
         <div className="admin-footer">
+          {pushSupported && (
+            <button
+              className="btn btn-sm"
+              style={{ width: '100%', marginBottom: 10 }}
+              onClick={pushSubscribed ? unsubscribeFromPush : subscribeToPush}
+              disabled={pushBusy}
+            >
+              {pushSubscribed ? '🔔 Notifications actives' : '🔕 Activer les notifications'}
+            </button>
+          )}
           <p className="text-muted">{profile?.email}</p>
           <button className="btn btn-ghost btn-sm" onClick={handleLogout}>Déconnexion</button>
         </div>

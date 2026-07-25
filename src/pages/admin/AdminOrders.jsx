@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { fetchOrders, updateOrderStatus, deleteOrder } from '../../lib/api'
 import { decrementStockForOrder, restockOrder } from '../../lib/stockApi'
+import { getStoredSoundEnabled, getStoredDuration, playNotificationSound, SOUND_ENABLED_KEY, SOUND_DURATION_KEY } from '../../lib/notifSound'
 
 const STATUSES = [
   { value: 'pending',   label: 'En attente',      color: '#8a8a86' },
@@ -21,59 +22,6 @@ const PAYMENT_LABELS = {
 }
 
 const REFRESH_INTERVAL_MS = 15000
-const SOUND_ENABLED_KEY  = 'admin_notif_sound_enabled'
-const SOUND_DURATION_KEY = 'admin_notif_sound_duration'
-const DEFAULT_DURATION   = 10
-
-function getStoredSoundEnabled() {
-  const v = localStorage.getItem(SOUND_ENABLED_KEY)
-  return v === null ? true : v === '1'
-}
-
-function getStoredDuration() {
-  const v = parseInt(localStorage.getItem(SOUND_DURATION_KEY), 10)
-  return Number.isFinite(v) && v > 0 ? v : DEFAULT_DURATION
-}
-
-function playNotificationSound(durationSeconds = DEFAULT_DURATION) {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)()
-    const totalMs = Math.max(1, durationSeconds) * 1000
-    const beepIntervalMs = 850
-    let elapsed = 0
-
-    function chime(startTime) {
-      const notes = [1046.5, 783.99]
-      notes.forEach((freq, i) => {
-        const osc = ctx.createOscillator()
-        const gain = ctx.createGain()
-        osc.type = 'triangle'
-        const t0 = startTime + i * 0.18
-        osc.frequency.setValueAtTime(freq, t0)
-        gain.gain.setValueAtTime(0, t0)
-        gain.gain.linearRampToValueAtTime(0.5, t0 + 0.02)
-        gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.5)
-        osc.connect(gain)
-        gain.connect(ctx.destination)
-        osc.start(t0)
-        osc.stop(t0 + 0.55)
-      })
-    }
-
-    let beepCount = 0
-    const timer = setInterval(() => {
-      if (elapsed >= totalMs) {
-        clearInterval(timer)
-        setTimeout(() => ctx.close().catch(() => {}), 1000)
-        return
-      }
-      chime(ctx.currentTime)
-      elapsed += beepIntervalMs
-      beepCount += 1
-    }, beepIntervalMs)
-    chime(ctx.currentTime)
-  } catch { /* navigateurs qui bloquent l'audio */ }
-}
 
 function statusLabel(s) { return STATUSES.find((x) => x.value === s)?.label || s }
 function statusColor(s)  { return STATUSES.find((x) => x.value === s)?.color || '#aaa' }

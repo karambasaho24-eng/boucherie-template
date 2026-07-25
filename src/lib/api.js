@@ -218,9 +218,25 @@ export async function deleteSnapshot(id) {
 // ---------- SITE CONFIG ----------
 
 export async function fetchSiteConfig() {
-  const { data, error } = await supabase.from('site_config').select('*').eq('id', 1).single()
+  // stripe_secret_key et stripe_webhook_secret sont volontairement exclus :
+  // leur lecture publique est bloquée côté base (voir migration
+  // restrict_stripe_secret_columns). Les inclure ici ferait échouer
+  // toute la requête pour TOUS les visiteurs.
+  const { data, error } = await supabase
+    .from('site_config')
+    .select('id, site_title, hero_title, hero_subtitle, about_title, about_text, phone, address, opening_hours, banner_image, logo_url, favicon_url, theme_color, business_type, whatsapp_number, order_mode, delivery_enabled, fulfillment_mode, pickup_delay, edit_deadline_minutes, stripe_enabled, stripe_publishable_key, stripe_mode, site_url, ubereats_enabled, ubereats_url, features, specialties, font_theme, vapid_public_key, auto_status_mode')
+    .eq('id', 1)
+    .single()
   if (error) throw error
   return data
+}
+
+// Réservé à l'admin (vérifié côté base par is_admin()) : récupère les deux
+// clés Stripe sensibles pour les afficher/éditer dans la configuration.
+export async function fetchStripeSecrets() {
+  const { data, error } = await supabase.rpc('get_stripe_secrets')
+  if (error) throw error
+  return data?.[0] || { stripe_secret_key: '', stripe_webhook_secret: '' }
 }
 
 export async function updateSiteConfig(updates) {
@@ -259,3 +275,19 @@ export async function getCurrentProfile() {
   if (error) throw error
   return { ...data, email: user.email }
 }
+
+// ---------- NOTIFICATIONS PUSH (arrière-plan / app fermée) ----------
+
+export async function savePushSubscription(subscription) {
+  const { error } = await supabase.from('push_subscriptions').upsert({
+    id: subscription.endpoint,
+    subscription,
+  })
+  if (error) throw error
+}
+
+export async function removePushSubscription(endpoint) {
+  const { error } = await supabase.from('push_subscriptions').delete().eq('id', endpoint)
+  if (error) throw error
+}
+
