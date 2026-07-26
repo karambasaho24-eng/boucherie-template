@@ -81,19 +81,6 @@ export default function App() {
     }
   }, [config?.site_title])
 
-  useEffect(() => {
-    const channel = supabase
-      .channel('public-site-config-realtime')
-      .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'site_config', filter: 'id=eq.1' },
-        (payload) => setConfig((prev) => ({ ...prev, ...payload.new }))
-      )
-      .subscribe()
-
-    return () => { supabase.removeChannel(channel) }
-  }, [])
-
   return (
     <BrowserRouter>
       <AuthProvider>
