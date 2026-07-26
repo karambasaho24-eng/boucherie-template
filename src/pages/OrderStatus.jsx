@@ -16,15 +16,21 @@ const STATUS_LABELS = {
   cancelled: 'Annulée',
 }
 
-const STATUS_DESCRIPTIONS = {
-  pending:   "Votre commande a bien été enregistrée. Elle est maintenant en attente de validation par la boucherie.",
-  confirmed: "Votre commande a été confirmée par la boucherie. La préparation va débuter.",
-  preparing: "La boucherie prépare actuellement votre commande. Merci de patienter.",
-  ready:     "Votre commande est prête ! Vous pouvez venir la récupérer à la boucherie.",
-  paid:      "Votre paiement a bien été reçu. Merci pour votre confiance !",
-  completed: "Cette commande est terminée. Merci pour votre confiance !",
-  refused:   "Cette commande a été refusée par la boucherie. Contactez-nous pour plus d'informations.",
-  cancelled: "Cette commande a été annulée.",
+function getStatusDescription(order) {
+  const paidByCard = order.payment_status === 'paid'
+  const descriptions = {
+    pending:   "Votre commande a bien été enregistrée. Elle est maintenant en attente de validation par la boucherie.",
+    confirmed: paidByCard
+      ? "Votre commande est confirmée et déjà payée par carte. Vous pouvez venir la récupérer directement à la boucherie."
+      : "Votre commande est confirmée ! Vous pouvez venir la récupérer directement à la boucherie (réglable sur place).",
+    preparing: "La boucherie prépare actuellement votre commande. Merci de patienter.",
+    ready:     "Votre commande est prête ! Vous pouvez venir la récupérer à la boucherie.",
+    paid:      "Votre paiement a bien été reçu. Merci pour votre confiance !",
+    completed: "Cette commande est terminée. Merci pour votre confiance !",
+    refused:   "Cette commande a été refusée par la boucherie. Contactez-nous pour plus d'informations.",
+    cancelled: "Cette commande a été annulée.",
+  }
+  return descriptions[order.status] || ''
 }
 
 const STATUS_ALERTS = {
@@ -33,8 +39,8 @@ const STATUS_ALERTS = {
     text: "N'allez pas récupérer votre commande avant d'avoir reçu la confirmation de la boucherie. Merci de patienter.",
   },
   confirmed: {
-    type: 'info',
-    text: "La boucherie a validé votre commande. La préparation peut prendre un certain temps.",
+    type: 'success',
+    text: "Votre commande est confirmée. Vous pouvez venir la récupérer directement à la boucherie.",
   },
   preparing: {
     type: 'info',
@@ -199,7 +205,7 @@ export default function OrderStatus() {
       <div className="container order-status-body">
         <div className="status-card">
           <span className="badge badge-status status-badge-large">{STATUS_LABELS[order.status]}</span>
-          <p className="status-desc">{STATUS_DESCRIPTIONS[order.status]}</p>
+          <p className="status-desc">{getStatusDescription(order)}</p>
           {STATUS_ALERTS[order.status] && (
             <div className={`status-alert status-alert-${STATUS_ALERTS[order.status].type}`}>
               {STATUS_ALERTS[order.status].type === 'warning' && '⚠️ '}

@@ -569,7 +569,8 @@ export default function AdminDashboardStats() {
               {topProducts.length === 0 ? (
                 <p className="text-muted" style={{ fontSize: 13 }}>Aucune vente sur cette période.</p>
               ) : (
-                <table className="dash-table">
+                <div className="dash-table-wrap">
+<table className="dash-table">
                   <thead>
                     <tr><th>Produit</th><th>Qté vendue</th><th>CA généré</th></tr>
                   </thead>
@@ -583,6 +584,7 @@ export default function AdminDashboardStats() {
                     ))}
                   </tbody>
                 </table>
+</div>
               )}
             </div>
 
@@ -591,7 +593,8 @@ export default function AdminDashboardStats() {
               {topCustomers.length === 0 ? (
                 <p className="text-muted" style={{ fontSize: 13 }}>Aucun client sur cette période.</p>
               ) : (
-                <table className="dash-table">
+                <div className="dash-table-wrap">
+<table className="dash-table">
                   <thead>
                     <tr><th>Client</th><th>Commandes</th><th>Total dépensé</th></tr>
                   </thead>
@@ -605,6 +608,7 @@ export default function AdminDashboardStats() {
                     ))}
                   </tbody>
                 </table>
+</div>
               )}
             </div>
           </div>
@@ -741,7 +745,8 @@ export default function AdminDashboardStats() {
         .hour-cell { background: var(--color-red); border-radius: 1px; }
         .hour-axis { display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: var(--color-text-muted); font-family: var(--font-mono); }
 
-        .dash-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .dash-table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .dash-table { width: 100%; min-width: 480px; border-collapse: collapse; font-size: 13px; }
         .dash-table th { text-align: left; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--color-text-muted); padding: 0 8px 10px 0; border-bottom: 1px solid var(--color-border); }
         .dash-table td { padding: 9px 8px 9px 0; border-bottom: 1px solid var(--color-border); vertical-align: top; }
         .dash-table tr:last-child td { border-bottom: none; }

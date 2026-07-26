@@ -40,7 +40,8 @@ function SnapshotDetail({ snapshot, onClose }) {
         {d.topProducts?.length > 0 && (
           <div className="snap-section">
             <h4>Produits les plus vendus</h4>
-            <table className="dash-table">
+            <div className="dash-table-wrap">
+<table className="dash-table">
               <thead><tr><th>Produit</th><th>Qté</th><th>CA</th></tr></thead>
               <tbody>
                 {d.topProducts.map((p) => (
@@ -52,13 +53,15 @@ function SnapshotDetail({ snapshot, onClose }) {
                 ))}
               </tbody>
             </table>
+</div>
           </div>
         )}
 
         {d.topCustomers?.length > 0 && (
           <div className="snap-section">
             <h4>Meilleurs clients</h4>
-            <table className="dash-table">
+            <div className="dash-table-wrap">
+<table className="dash-table">
               <thead><tr><th>Client</th><th>Commandes</th><th>Total</th></tr></thead>
               <tbody>
                 {d.topCustomers.map((c) => (
@@ -70,6 +73,7 @@ function SnapshotDetail({ snapshot, onClose }) {
                 ))}
               </tbody>
             </table>
+</div>
           </div>
         )}
 
@@ -100,7 +104,8 @@ function SnapshotDetail({ snapshot, onClose }) {
         .snap-section h4 { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--color-red); margin: 0 0 10px; }
         .snap-category-row { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--color-border); }
         .mono-sm { font-family: var(--font-mono); font-size: 11px; }
-        .dash-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .dash-table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .dash-table { width: 100%; min-width: 480px; border-collapse: collapse; font-size: 13px; }
         .dash-table th { text-align: left; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--color-text-muted); padding: 0 8px 8px 0; border-bottom: 1px solid var(--color-border); }
         .dash-table td { padding: 7px 8px 7px 0; border-bottom: 1px solid var(--color-border); }
         .dash-table tr:last-child td { border-bottom: none; }

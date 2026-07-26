@@ -52,6 +52,19 @@ export function useOrderAlerts(vapidPublicKey) {
 
   const subscribeToPush = useCallback(async () => {
     if (!vapidPublicKey || pushBusy) return
+
+    const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone
+    if (isIos && !isStandalone) {
+      alert(
+        "Sur iPhone, il faut d'abord ajouter le site à l'écran d'accueil pour recevoir des notifications :\n\n" +
+        "1. Appuie sur le bouton Partager (carré avec une flèche) en bas de Safari\n" +
+        "2. Choisis \"Sur l'écran d'accueil\"\n" +
+        "3. Ouvre ensuite l'app depuis l'icône ajoutée, puis réessaie d'activer les notifications."
+      )
+      return
+    }
+
     setPushBusy(true)
     try {
       const permission = await Notification.requestPermission()
