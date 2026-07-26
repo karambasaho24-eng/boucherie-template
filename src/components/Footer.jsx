@@ -16,7 +16,7 @@ export default function Footer({ config }) {
               )}
             </span>
             <h3>{config?.site_title || "Ma Boucherie"}</h3>
-            <p>Boucherie halal & épicerie orientale au cœur des Sablons, Le Mans</p>
+            <p>Boucherie artisanale, viandes fraîches et fait maison</p>
             <div className="footer-certif">
               <span>Halal certifié</span>
               <span>Vente directe</span>

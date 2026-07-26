@@ -157,11 +157,11 @@ export default function Home({ config }) {
           <h1 className="hero-title">
             <span className="hero-title-line">BOUCHE<span className="hero-title-accent">R</span>IE</span>
             <span className="hero-title-rule" />
-            <span className="hero-title-sub">{config?.hero_title || "Tradisud Halal"}</span>
+            <span className="hero-title-sub">{config?.hero_title || ''}</span>
           </h1>
 
           <p className="hero-subtitle">
-            {config?.hero_subtitle || 'Charcuterie & rôtisserie halal artisanales — découpées sur place, chaque jour.'}
+            {config?.hero_subtitle || 'Viandes fraîches, découpées sur place, chaque jour.'}
           </p>
 
           <div className="hero-actions">
@@ -289,7 +289,7 @@ export default function Home({ config }) {
             <h2 className="ambiance-title">{config?.about_title || 'Notre histoire'}</h2>
             <p className="ambiance-text">
               {config?.about_text ||
-                "Installée au cœur des Sablons au Mans, la Boucherie Tradisud Halal vous accueille chaque jour avec des produits frais, une découpe soignée et le sourire. Notre passion : vous offrir la meilleure viande halal au meilleur prix."}
+                "Installée au cœur du Mans, notre boucherie vous accueille chaque jour avec des produits frais, une découpe soignée et le sourire."}
             </p>
             <a href={`tel:${phoneClean}`} className="btn btn-outline" style={{ marginTop: 28 }}>
               Nous appeler
