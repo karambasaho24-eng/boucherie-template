@@ -58,7 +58,7 @@ function ReceiptVisual({ order, shopName }) {
 
       <div style={{ fontSize: 11, fontWeight: 700, marginBottom: 6, letterSpacing: 0.5 }}>ARTICLES</div>
       {items.map((i, idx) => (
-        <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
+        <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6, lineHeight: 1.5 }}>
           <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingRight: 8 }}>
             {i.name} x{i.qty}
           </span>
@@ -98,6 +98,10 @@ export default function Receipt({ order, shopName }) {
     try {
       const html2canvas = (await import('html2canvas')).default
       const node = document.getElementById(`receipt-printable-${order.id}`)
+      // Attendre que la police custom (Space Mono) soit bien chargée avant
+      // de capturer : sinon html2canvas utilise les métriques d'une police
+      // de secours pendant un instant, ce qui décale/coupe le texte.
+      if (document.fonts?.ready) await document.fonts.ready
       const canvas = await html2canvas(node, {
         scale: 2,
         useCORS: true,
