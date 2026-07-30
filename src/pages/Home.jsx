@@ -98,6 +98,10 @@ function HeroVideo({ src, poster }) {
       playsInline
       webkit-playsinline="true"
       preload="auto"
+      disablePictureInPicture
+      disableRemotePlayback
+      controlsList="nodownload noplaybackrate nofullscreen"
+      style={{ pointerEvents: 'none' }}
       poster={poster || undefined}
     />
   )
@@ -396,6 +400,16 @@ export default function Home({ config }) {
           will-change: transform;
         }
         .hero-bg-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.1); }
+        /* Masque le bouton "lecture" natif (Safari/Chrome mobile) qui peut
+           apparaître brièvement avant que l'autoplay ne démarre. */
+        video.hero-bg-img::-webkit-media-controls,
+        video.hero-bg-img::-webkit-media-controls-start-playback-button,
+        video.hero-bg-img::-webkit-media-controls-play-button {
+          display: none !important;
+          -webkit-appearance: none;
+          opacity: 0 !important;
+          pointer-events: none !important;
+        }
 
         .hero-topline, .hero-bottomline {
           position: relative;
