@@ -134,7 +134,17 @@ export default function Home({ config }) {
       <section className="hero" ref={heroRef}>
         <div className="hero-grain" />
         <div className="hero-bg-layer" style={{ transform: 'translateY(var(--scrollY, 0px))' }}>
-          {config?.banner_image && (
+          {config?.banner_video ? (
+            <video
+              src={config.banner_video}
+              className="hero-bg-img"
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster={config?.banner_image || undefined}
+            />
+          ) : config?.banner_image && (
             <img src={config.banner_image} alt="" className="hero-bg-img" />
           )}
         </div>
@@ -323,7 +333,6 @@ export default function Home({ config }) {
           </div>
         </div>
       </section>
-
       <style>{`
         .home-page { overflow-x: clip; }
 
