@@ -64,8 +64,8 @@ export default function AdminConfig() {
   async function handleBannerVideoUpload(e) {
     const file = e.target.files?.[0]
     if (!file) return
-    if (file.size > 30 * 1024 * 1024) {
-      setError('Vidéo trop lourde (30 Mo max). Compresse-la avant de l\'envoyer.')
+    if (file.size > 100 * 1024 * 1024) {
+      setError('Vidéo trop lourde (100 Mo max). Compresse-la avant de l\'envoyer.')
       return
     }
     setUploading(true)
@@ -217,7 +217,7 @@ export default function AdminConfig() {
         <div className="config-block">
           <h4>Vidéo bannière (optionnel)</h4>
           <p className="text-muted" style={{ fontSize: 12.5, marginTop: -6, marginBottom: 12 }}>
-            Si une vidéo est ajoutée, elle remplace l'image bannière en fond de page d'accueil (lecture automatique, en boucle, sans son). Format MP4 recommandé, 30 Mo max.
+            Si une vidéo est ajoutée, elle remplace l'image bannière en fond de page d'accueil (lecture automatique, en boucle, sans son). Format MP4 recommandé, 100 Mo max.
           </p>
           {config.banner_video && (
             <video src={config.banner_video} className="banner-preview" autoPlay loop muted playsInline />
