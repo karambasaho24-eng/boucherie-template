@@ -224,7 +224,7 @@ export async function fetchSiteConfig() {
   // toute la requête pour TOUS les visiteurs.
   const { data, error } = await supabase
     .from('site_config')
-    .select('id, site_title, hero_title, hero_subtitle, about_title, about_text, phone, address, opening_hours, banner_image, logo_url, favicon_url, theme_color, business_type, whatsapp_number, order_mode, delivery_enabled, fulfillment_mode, pickup_delay, edit_deadline_minutes, stripe_enabled, stripe_publishable_key, stripe_mode, site_url, ubereats_enabled, ubereats_url, features, specialties, font_theme, vapid_public_key, auto_status_mode')
+    .select('id, site_title, hero_title, hero_subtitle, about_title, about_text, phone, address, opening_hours, banner_image, banner_video, logo_url, favicon_url, theme_color, business_type, whatsapp_number, order_mode, delivery_enabled, fulfillment_mode, pickup_delay, edit_deadline_minutes, stripe_enabled, stripe_publishable_key, stripe_mode, site_url, ubereats_enabled, ubereats_url, features, specialties, font_theme, vapid_public_key, auto_status_mode')
     .eq('id', 1)
     .single()
   if (error) throw error
@@ -249,6 +249,17 @@ export async function uploadSiteImage(file) {
   const ext = file.name.split('.').pop()
   const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
   const { error } = await supabase.storage.from('site-images').upload(fileName, file)
+  if (error) throw error
+  const { data } = supabase.storage.from('site-images').getPublicUrl(fileName)
+  return data.publicUrl
+}
+
+export async function uploadSiteVideo(file) {
+  const ext = file.name.split('.').pop()
+  const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+  const { error } = await supabase.storage.from('site-images').upload(fileName, file, {
+    contentType: file.type || 'video/mp4',
+  })
   if (error) throw error
   const { data } = supabase.storage.from('site-images').getPublicUrl(fileName)
   return data.publicUrl
@@ -290,4 +301,3 @@ export async function removePushSubscription(endpoint) {
   const { error } = await supabase.from('push_subscriptions').delete().eq('id', endpoint)
   if (error) throw error
 }
-
