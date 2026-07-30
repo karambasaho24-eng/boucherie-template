@@ -301,3 +301,4 @@ export async function removePushSubscription(endpoint) {
   const { error } = await supabase.from('push_subscriptions').delete().eq('id', endpoint)
   if (error) throw error
 }
+
