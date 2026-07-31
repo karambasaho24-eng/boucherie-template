@@ -68,6 +68,9 @@ export default function IntroExperience({ onDone }) {
       timelineRef.current = tl
 
       tl.set(rootRef.current, { autoAlpha: 1 })
+      // Masqués tant que leur mouvement n'a pas commencé — sinon ils
+      // restent visibles/statiques au centre dès l'instant zéro.
+      tl.set([knifeLeftRef.current, knifeRightRef.current], { opacity: 0 }, 0)
 
       // 0. Brume qui s'installe, viande posée au centre
       fogEls.forEach((el, i) => {
@@ -81,7 +84,9 @@ export default function IntroExperience({ onDone }) {
 
       // 1. Frappe en arc de cercle — les couteaux se lèvent depuis les
       // côtés hauts, puis décrivent une courbe descendante jusqu'à
-      // l'impact, comme un vrai geste de coupe de boucher.
+      // l'impact, comme un vrai geste de coupe de boucher. Ils passent
+      // à pleine opacité tout de suite (encore hors-champ), pour ne
+      // jamais apparaître translucides devant la viande.
       const impactT = 1.85
       const swingDuration = 1.05
       const swingStart = impactT - swingDuration
@@ -89,14 +94,16 @@ export default function IntroExperience({ onDone }) {
       tl.to(knifeLeftRef.current, {
         keyframes: [
           { x: '-62vw', y: '-46vh', rotate: -62, opacity: 0, duration: 0 },
-          { x: '-24vw', y: '-16vh', rotate: -30, opacity: 1, duration: 0.65, ease: 'power1.inOut' },
+          { x: '-52vw', y: '-41vh', rotate: -58, opacity: 1, duration: 0.1, ease: 'none' },
+          { x: '-24vw', y: '-16vh', rotate: -30, opacity: 1, duration: 0.55, ease: 'power1.inOut' },
           { x: 0, y: 0, rotate: -4, opacity: 1, duration: 0.4, ease: 'power4.in' },
         ],
       }, swingStart)
       tl.to(knifeRightRef.current, {
         keyframes: [
           { x: '62vw', y: '-46vh', rotate: 62, opacity: 0, duration: 0 },
-          { x: '24vw', y: '-16vh', rotate: 30, opacity: 1, duration: 0.65, ease: 'power1.inOut' },
+          { x: '52vw', y: '-41vh', rotate: 58, opacity: 1, duration: 0.1, ease: 'none' },
+          { x: '24vw', y: '-16vh', rotate: 30, opacity: 1, duration: 0.55, ease: 'power1.inOut' },
           { x: 0, y: 0, rotate: 4, opacity: 1, duration: 0.4, ease: 'power4.in' },
         ],
       }, swingStart)
