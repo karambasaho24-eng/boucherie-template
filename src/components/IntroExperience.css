@@ -151,36 +151,6 @@
   color: rgba(250, 249, 246, 0.85);
 }
 
-/* Transition "lame" vers le site */
-.intro-wipe {
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.wipe-left,
-.wipe-right {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 50%;
-  background: #050505;
-}
-.wipe-left { left: 0; }
-.wipe-right { right: 0; }
-
-.wipe-blade {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: -4%;
-  width: 8%;
-  background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.9) 48%, transparent 100%);
-  filter: blur(1px);
-}
-
 @media (max-width: 640px) {
   .intro-knife { width: 46vw; }
   .intro-logo { max-height: 44px; }

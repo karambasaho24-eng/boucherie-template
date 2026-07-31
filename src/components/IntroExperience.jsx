@@ -23,7 +23,6 @@ export default function IntroExperience({ siteTitle, tagline, logoUrl, onDone })
   const flashRef = useRef(null)
   const sparksRef = useRef(null)
   const revealRef = useRef(null)
-  const wipeRef = useRef(null)
   const [canSkip, setCanSkip] = useState(false)
   const [finishing, setFinishing] = useState(false)
   const [logoFailed, setLogoFailed] = useState(false)
@@ -103,15 +102,16 @@ export default function IntroExperience({ siteTitle, tagline, logoUrl, onDone })
     sessionStorage.setItem(SESSION_KEY, '1')
 
     const tl = gsap.timeline({ onComplete: () => onDone?.() })
-    tl.set(wipeRef.current, { autoAlpha: 1 })
-    tl.fromTo(wipeRef.current.querySelector('.wipe-blade'),
-      { xPercent: -100 }, { xPercent: 100, duration: 0.5, ease: 'power4.in' })
-    tl.to(rootRef.current, { opacity: 0, duration: 0.25 }, '-=0.15')
-    tl.to([wipeRef.current.querySelector('.wipe-left'), wipeRef.current.querySelector('.wipe-right')], {
-      xPercent: (i) => (i === 0 ? -100 : 100),
-      duration: 0.7,
-      ease: 'power3.inOut',
-    }, '-=0.1')
+
+    // La marque s'efface, les couteaux redeviennent visibles à leur
+    // position fermée (centre), puis se rouvrent en s'écartant — comme
+    // au ralenti inverse de l'entrée — pendant que le fond s'efface pour
+    // révéler le site en dessous.
+    tl.to(revealRef.current, { opacity: 0, y: -10, duration: 0.35, ease: 'power2.in' })
+    tl.set(knivesRowRef.current, { opacity: 1 })
+    tl.to(knifeLeftRef.current, { x: '-75vw', rotate: -14, duration: 0.85, ease: 'power2.in' }, '<0.05')
+    tl.to(knifeRightRef.current, { x: '75vw', rotate: 14, duration: 0.85, ease: 'power2.in' }, '<')
+    tl.to(rootRef.current, { opacity: 0, duration: 0.5, ease: 'power2.out' }, '-=0.45')
   }
 
   return (
@@ -221,12 +221,6 @@ export default function IntroExperience({ siteTitle, tagline, logoUrl, onDone })
           Passer
         </button>
       )}
-
-      <div className="intro-wipe" ref={wipeRef} aria-hidden="true">
-        <div className="wipe-left" />
-        <div className="wipe-right" />
-        <div className="wipe-blade" />
-      </div>
     </div>
   )
 }
