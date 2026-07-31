@@ -4,30 +4,38 @@ import './IntroExperience.css'
 import knifeLeftImg from '../assets/intro/couperet-left.png'
 import knifeRightImg from '../assets/intro/couperet-right.png'
 
-const SESSION_KEY = 'intro_seen_v1'
+const SESSION_KEY = 'intro_seen_v2'
+// Place un fichier audio ici (mp3/ogg, ambiance forge/atelier, courte boucle)
+// pour activer le son. Tant qu'il est absent, l'icône son reste masquée.
+const AMBIENT_SOUND_SRC = '/sounds/forge-ambient.mp3'
 
 /**
- * Scène d'ouverture cinématique : deux couteaux glissent l'un vers l'autre,
- * impact (flash + étincelles), puis fondu vers le logo/titre.
+ * Scène d'ouverture cinématique : deux couperets entrent en angle, frappent
+ * un morceau de viande posé au centre, le tranchent net. La moitié basse
+ * tombe (accélération façon gravité + rotation), et pendant sa chute le
+ * site apparaît derrière — sans action requise. "Passer" permet de tout
+ * ignorer à tout moment.
  *
- * Note technique : chaque <svg> couteau n'est JAMAIS stylé avec un
- * `transform` en CSS — GSAP est seul propriétaire du transform de ces
- * éléments (x / rotate). Le positionnement (centrage, symétrie) est géré
- * par la mise en page flex du parent + un second tracé de lame déjà
- * "miroir" pour le couteau droit (au lieu d'un scaleX CSS sur le même
- * nœud que GSAP anime, qui écrasait tout — c'était le bug initial).
+ * Note technique : aucun élément animé par GSAP (couteaux, viande, root)
+ * n'a de `transform` déclaré en CSS — GSAP en reste seul propriétaire.
+ * Le positionnement/symétrie passe par la mise en page flex + deux fichiers
+ * image déjà "miroir" en pixels pour les couteaux.
  */
-export default function IntroExperience({ siteTitle, tagline, logoUrl, onDone }) {
+export default function IntroExperience({ onDone }) {
   const rootRef = useRef(null)
   const knifeLeftRef = useRef(null)
   const knifeRightRef = useRef(null)
-  const knivesRowRef = useRef(null)
   const flashRef = useRef(null)
   const sparksRef = useRef(null)
-  const revealRef = useRef(null)
-  const [canSkip, setCanSkip] = useState(false)
+  const meatTopRef = useRef(null)
+  const meatBottomRef = useRef(null)
+  const meatShadowRef = useRef(null)
+  const fogRefs = useRef([])
+  const audioRef = useRef(null)
+  const timelineRef = useRef(null)
   const [finishing, setFinishing] = useState(false)
-  const [logoFailed, setLogoFailed] = useState(false)
+  const [soundAvailable, setSoundAvailable] = useState(false)
+  const [soundOn, setSoundOn] = useState(false)
 
   useEffect(() => {
     const alreadySeen = sessionStorage.getItem(SESSION_KEY)
@@ -39,40 +47,69 @@ export default function IntroExperience({ siteTitle, tagline, logoUrl, onDone })
       return
     }
 
+    // Tente de démarrer le son en muet (autorisé sans interaction).
+    // Si le fichier est absent/erreur, l'icône ne s'affiche jamais.
+    const audio = audioRef.current
+    if (audio) {
+      audio.volume = 0.35
+      audio.play().then(() => setSoundAvailable(true)).catch(() => setSoundAvailable(false))
+    }
+
     const ctx = gsap.context(() => {
       const sparkEls = sparksRef.current?.querySelectorAll('.spark') || []
+      const fogEls = fogRefs.current.filter(Boolean)
 
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+      const tl = gsap.timeline({
+        defaults: { ease: 'power2.out' },
+        onComplete: finishAndReveal,
+      })
+      timelineRef.current = tl
 
       tl.set(rootRef.current, { autoAlpha: 1 })
 
-      // 1. Arrivée lente, tension avant impact
+      // 0. Brume qui s'installe, viande posée au centre
+      fogEls.forEach((el, i) => {
+        tl.fromTo(el,
+          { opacity: 0, x: i % 2 === 0 ? -40 : 40 },
+          { opacity: 0.5, x: 0, duration: 1.8, ease: 'sine.out' }, 0)
+      })
+      tl.fromTo([meatTopRef.current, meatBottomRef.current],
+        { opacity: 0, scale: 0.92 },
+        { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out' }, 0.25)
+
+      // 1. Frappe puissante — angle marqué, accélération franche
       tl.fromTo(knifeLeftRef.current,
-        { x: '-55vw', rotate: -10, opacity: 0 },
-        { x: 0, rotate: 0, opacity: 1, duration: 1.5, ease: 'power2.inOut' }, 0.15)
+        { x: '-58vw', y: '-6vh', rotate: -32, opacity: 0 },
+        { x: 0, y: 0, rotate: -4, opacity: 1, duration: 0.95, ease: 'power4.in' }, 0.9)
       tl.fromTo(knifeRightRef.current,
-        { x: '55vw', rotate: 10, opacity: 0 },
-        { x: 0, rotate: 0, opacity: 1, duration: 1.5, ease: 'power2.inOut' }, 0.15)
+        { x: '58vw', y: '-6vh', rotate: 32, opacity: 0 },
+        { x: 0, y: 0, rotate: 4, opacity: 1, duration: 0.95, ease: 'power4.in' }, 0.9)
 
-      // Micro-suspension avant le contact
-      tl.to({}, { duration: 0.15 }, 1.65)
-
-      // 2. Impact : flash, étincelles, vibration
-      tl.to(flashRef.current, { opacity: 1, duration: 0.045 }, 1.8)
-      tl.to(flashRef.current, { opacity: 0, duration: 0.45, ease: 'power2.out' }, 1.845)
-      tl.to([knifeLeftRef.current, knifeRightRef.current], {
+      // 2. Impact : flash, étincelles, secousse écran, découpe nette
+      const impactT = 1.85
+      tl.to(flashRef.current, { opacity: 1, duration: 0.04 }, impactT)
+      tl.to(flashRef.current, { opacity: 0, duration: 0.4, ease: 'power2.out' }, impactT + 0.04)
+      tl.to(rootRef.current, {
         keyframes: [
-          { x: '+=5', rotate: '+=1.2', duration: 0.035 },
-          { x: '-=9', rotate: '-=2', duration: 0.045 },
-          { x: '+=4', rotate: '+=0.8', duration: 0.045 },
-          { x: '+=0', rotate: '+=0', duration: 0.07 },
+          { x: -4, y: 2, duration: 0.03 },
+          { x: 5, y: -3, duration: 0.04 },
+          { x: -3, y: 1, duration: 0.04 },
+          { x: 0, y: 0, duration: 0.06 },
         ],
         ease: 'none',
-      }, 1.8)
+      }, impactT)
+      tl.to([knifeLeftRef.current, knifeRightRef.current], {
+        keyframes: [
+          { x: '+=4', rotate: '+=1', duration: 0.03 },
+          { x: '-=6', rotate: '-=1.5', duration: 0.04 },
+          { x: '+=0', rotate: '+=0', duration: 0.06 },
+        ],
+        ease: 'none',
+      }, impactT)
 
       sparkEls.forEach((s, i) => {
         const angle = (Math.PI * 2 * i) / sparkEls.length + (Math.random() - 0.5) * 0.5
-        const dist = 36 + Math.random() * 80
+        const dist = 40 + Math.random() * 90
         tl.fromTo(s,
           { opacity: 1, x: 0, y: 0, scale: 1 },
           {
@@ -82,77 +119,143 @@ export default function IntroExperience({ siteTitle, tagline, logoUrl, onDone })
             scale: 0.2,
             duration: 0.5 + Math.random() * 0.3,
             ease: 'power2.out',
-          }, 1.8)
+          }, impactT)
       })
 
-      // 3. Les couteaux s'effacent, la marque se révèle à leur place
-      tl.to(knivesRowRef.current, { opacity: 0, duration: 0.6, ease: 'power2.out' }, 2.15)
-      tl.fromTo(revealRef.current,
-        { opacity: 0, y: 14, scale: 0.98 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: 'power2.out' }, 2.35)
+      // 3. La moitié basse tombe (accélération façon gravité + rotation)
+      tl.to(meatBottomRef.current, {
+        y: '85vh',
+        rotate: 22,
+        x: 18,
+        duration: 1.1,
+        ease: 'power2.in',
+      }, impactT + 0.12)
+      tl.to(meatShadowRef.current, {
+        opacity: 0,
+        scaleX: 1.6,
+        duration: 0.9,
+        ease: 'power1.out',
+      }, impactT + 0.12)
 
-      tl.call(() => setCanSkip(true), null, 2.55)
+      // Les couteaux se retirent légèrement puis s'estompent
+      tl.to([knifeLeftRef.current, knifeRightRef.current], {
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+      }, impactT + 0.35)
+      tl.to(meatTopRef.current, { opacity: 0, duration: 0.5, ease: 'power2.out' }, impactT + 0.5)
+      fogEls.forEach((el) => {
+        tl.to(el, { opacity: 0, duration: 0.7, ease: 'power2.out' }, impactT + 0.3)
+      })
+
+      // 4. Le fond s'efface pendant la chute — le site apparaît derrière,
+      // aucune action requise
+      tl.to(rootRef.current, { opacity: 0, duration: 0.7, ease: 'power2.out' }, impactT + 0.55)
     }, rootRef)
 
     return () => ctx.revert()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  function handleEnter() {
+  function finishAndReveal() {
     if (finishing) return
     setFinishing(true)
     sessionStorage.setItem(SESSION_KEY, '1')
+    onDone?.()
+  }
 
-    const tl = gsap.timeline({ onComplete: () => onDone?.() })
+  function handleSkip() {
+    if (finishing) return
+    timelineRef.current?.kill()
+    const tl = gsap.timeline({ onComplete: finishAndReveal })
+    tl.to(rootRef.current, { opacity: 0, duration: 0.35, ease: 'power2.out' })
+  }
 
-    // La marque s'efface, les couteaux redeviennent visibles à leur
-    // position fermée (centre), puis se rouvrent en s'écartant — comme
-    // au ralenti inverse de l'entrée — pendant que le fond s'efface pour
-    // révéler le site en dessous.
-    tl.to(revealRef.current, { opacity: 0, y: -10, duration: 0.35, ease: 'power2.in' })
-    tl.set(knivesRowRef.current, { opacity: 1 })
-    tl.to(knifeLeftRef.current, { x: '-75vw', rotate: -14, duration: 0.85, ease: 'power2.in' }, '<0.05')
-    tl.to(knifeRightRef.current, { x: '75vw', rotate: 14, duration: 0.85, ease: 'power2.in' }, '<')
-    tl.to(rootRef.current, { opacity: 0, duration: 0.5, ease: 'power2.out' }, '-=0.45')
+  function toggleSound() {
+    const audio = audioRef.current
+    if (!audio) return
+    const next = !soundOn
+    audio.muted = !next
+    setSoundOn(next)
   }
 
   return (
     <div className="intro-experience" ref={rootRef}>
+      <audio
+        ref={audioRef}
+        src={AMBIENT_SOUND_SRC}
+        muted
+        loop
+        preload="auto"
+        onError={() => setSoundAvailable(false)}
+      />
+
       <div className="intro-stage">
-        <div className="intro-knives-row" ref={knivesRowRef}>
+        <div className="intro-fog" aria-hidden="true">
+          <span className="fog-blob fog-blob--1" ref={(el) => (fogRefs.current[0] = el)} />
+          <span className="fog-blob fog-blob--2" ref={(el) => (fogRefs.current[1] = el)} />
+          <span className="fog-blob fog-blob--3" ref={(el) => (fogRefs.current[2] = el)} />
+        </div>
+
+        <div className="intro-meat" aria-hidden="true">
+          <div className="intro-meat-shadow" ref={meatShadowRef} />
+          <svg className="meat-piece meat-piece--top" ref={meatTopRef} viewBox="0 0 320 170">
+            <defs>
+              <clipPath id="clipTop"><rect x="0" y="0" width="320" height="83" /></clipPath>
+              <linearGradient id="meatGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#9c3a2c" />
+                <stop offset="45%" stopColor="#7c2a20" />
+                <stop offset="100%" stopColor="#551b15" />
+              </linearGradient>
+            </defs>
+            <g clipPath="url(#clipTop)">
+              <rect x="40" y="35" width="240" height="100" rx="50" fill="url(#meatGrad)" />
+              <path d="M48,48 Q160,26 272,48 L272,58 Q160,40 48,58 Z" fill="#ecdcc6" opacity="0.85" />
+              <path d="M95,72 Q130,62 160,74 T225,77" stroke="#f2e2cf" strokeWidth="4" fill="none" opacity="0.3" strokeLinecap="round" />
+              <path d="M85,95 Q130,88 175,97 T240,98" stroke="#3a0f0c" strokeWidth="5" fill="none" opacity="0.25" strokeLinecap="round" />
+            </g>
+          </svg>
+          <svg className="meat-piece meat-piece--bottom" ref={meatBottomRef} viewBox="0 0 320 170">
+            <defs>
+              <clipPath id="clipBottom"><rect x="0" y="83" width="320" height="87" /></clipPath>
+            </defs>
+            <g clipPath="url(#clipBottom)">
+              <rect x="40" y="35" width="240" height="100" rx="50" fill="url(#meatGrad)" />
+              <path d="M85,95 Q130,88 175,97 T240,98" stroke="#3a0f0c" strokeWidth="5" fill="none" opacity="0.25" strokeLinecap="round" />
+              <path d="M70,118 Q150,132 250,116" stroke="#3a0f0c" strokeWidth="3" fill="none" opacity="0.2" strokeLinecap="round" />
+              <line x1="40" y1="84" x2="280" y2="84" stroke="#fbeee0" strokeWidth="2.5" opacity="0.9" />
+            </g>
+          </svg>
+        </div>
+
+        <div className="intro-knives-row">
           <img className="intro-knife" ref={knifeLeftRef} src={knifeLeftImg} alt="" aria-hidden="true" />
           <img className="intro-knife" ref={knifeRightRef} src={knifeRightImg} alt="" aria-hidden="true" />
         </div>
 
         <div className="intro-sparks" ref={sparksRef} aria-hidden="true">
-          {Array.from({ length: 14 }).map((_, i) => (
+          {Array.from({ length: 16 }).map((_, i) => (
             <span key={i} className="spark" />
           ))}
         </div>
 
         <div className="intro-flash" ref={flashRef} aria-hidden="true" />
-
-        <div className="intro-reveal" ref={revealRef}>
-          {logoUrl && !logoFailed && (
-            <img
-              src={logoUrl}
-              alt=""
-              className="intro-logo"
-              onError={() => setLogoFailed(true)}
-            />
-          )}
-          <h1 className="intro-title">{siteTitle || 'Maison'}</h1>
-          {tagline && <p className="intro-tagline">{tagline}</p>}
-          {canSkip && (
-            <button type="button" className="intro-enter" onClick={handleEnter}>
-              Entrer
-            </button>
-          )}
-        </div>
       </div>
 
+      {soundAvailable && (
+        <button
+          type="button"
+          className="intro-sound-toggle"
+          onClick={toggleSound}
+          aria-pressed={soundOn}
+          aria-label={soundOn ? 'Couper le son' : 'Activer le son'}
+        >
+          {soundOn ? '♪' : '♪ off'}
+        </button>
+      )}
+
       {!finishing && (
-        <button type="button" className="intro-skip" onClick={handleEnter} aria-label="Passer l'introduction">
+        <button type="button" className="intro-skip" onClick={handleSkip} aria-label="Passer l'introduction">
           Passer
         </button>
       )}

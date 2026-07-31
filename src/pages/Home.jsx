@@ -180,12 +180,7 @@ export default function Home({ config }) {
   return (
     <div className="home-page">
       {!introDone && (
-        <IntroExperience
-          siteTitle={config?.site_title}
-          tagline={config?.hero_subtitle}
-          logoUrl={config?.logo_url}
-          onDone={() => setIntroDone(true)}
-        />
+        <IntroExperience onDone={() => setIntroDone(true)} />
       )}
 
       {/* ── HERO ── */}
