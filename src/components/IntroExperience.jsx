@@ -79,16 +79,29 @@ export default function IntroExperience({ onDone }) {
         { opacity: 0, scale: 0.92 },
         { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out' }, 0.25)
 
-      // 1. Frappe puissante — angle marqué, accélération franche
-      tl.fromTo(knifeLeftRef.current,
-        { x: '-58vw', y: '-6vh', rotate: -32, opacity: 0 },
-        { x: 0, y: 0, rotate: -4, opacity: 1, duration: 0.95, ease: 'power4.in' }, 0.9)
-      tl.fromTo(knifeRightRef.current,
-        { x: '58vw', y: '-6vh', rotate: 32, opacity: 0 },
-        { x: 0, y: 0, rotate: 4, opacity: 1, duration: 0.95, ease: 'power4.in' }, 0.9)
+      // 1. Frappe en arc de cercle — les couteaux se lèvent depuis les
+      // côtés hauts, puis décrivent une courbe descendante jusqu'à
+      // l'impact, comme un vrai geste de coupe de boucher.
+      const impactT = 1.85
+      const swingDuration = 1.05
+      const swingStart = impactT - swingDuration
+
+      tl.to(knifeLeftRef.current, {
+        keyframes: [
+          { x: '-62vw', y: '-46vh', rotate: -62, opacity: 0, duration: 0 },
+          { x: '-24vw', y: '-16vh', rotate: -30, opacity: 1, duration: 0.65, ease: 'power1.inOut' },
+          { x: 0, y: 0, rotate: -4, opacity: 1, duration: 0.4, ease: 'power4.in' },
+        ],
+      }, swingStart)
+      tl.to(knifeRightRef.current, {
+        keyframes: [
+          { x: '62vw', y: '-46vh', rotate: 62, opacity: 0, duration: 0 },
+          { x: '24vw', y: '-16vh', rotate: 30, opacity: 1, duration: 0.65, ease: 'power1.inOut' },
+          { x: 0, y: 0, rotate: 4, opacity: 1, duration: 0.4, ease: 'power4.in' },
+        ],
+      }, swingStart)
 
       // 2. Impact : flash, étincelles, secousse écran, découpe nette
-      const impactT = 1.85
       tl.to(flashRef.current, { opacity: 1, duration: 0.04 }, impactT)
       tl.to(flashRef.current, { opacity: 0, duration: 0.4, ease: 'power2.out' }, impactT + 0.04)
       tl.to(rootRef.current, {
@@ -127,7 +140,7 @@ export default function IntroExperience({ onDone }) {
       // 3. La tranche vient d'être découpée : elle apparaît au sommet du
       // bloc puis tombe (accélération façon gravité + rotation). Le gros
       // bloc encaisse un léger choc.
-      tl.set(meatSliceRef.current, { xPercent: -50, yPercent: -50, x: 0, y: '-7vh', rotate: 0, opacity: 1 }, impactT)
+      tl.set(meatSliceRef.current, { xPercent: -50, yPercent: -50, x: 0, y: '-6vh', rotate: 0, opacity: 1 }, impactT)
       tl.to(meatBigRef.current, {
         keyframes: [
           { scale: 1.025, duration: 0.05 },
