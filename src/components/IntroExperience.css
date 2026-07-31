@@ -26,7 +26,7 @@
 }
 
 .intro-knife {
-  width: min(40vw, 380px);
+  width: min(36vw, 460px);
   height: auto;
   display: block;
   filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.55));
@@ -152,6 +152,6 @@
 }
 
 @media (max-width: 640px) {
-  .intro-knife { width: 46vw; }
+  .intro-knife { width: 60vw; }
   .intro-logo { max-height: 44px; }
 }

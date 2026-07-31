@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import './IntroExperience.css'
+import knifeLeftImg from '../assets/intro/couperet-left.png'
+import knifeRightImg from '../assets/intro/couperet-right.png'
 
 const SESSION_KEY = 'intro_seen_v1'
 
@@ -118,75 +120,8 @@ export default function IntroExperience({ siteTitle, tagline, logoUrl, onDone })
     <div className="intro-experience" ref={rootRef}>
       <div className="intro-stage">
         <div className="intro-knives-row" ref={knivesRowRef}>
-          <svg className="intro-knife" ref={knifeLeftRef} viewBox="0 0 400 120" aria-hidden="true">
-            <defs>
-              <linearGradient id="bladeGradL" x1="0" y1="0" x2="0.3" y2="1">
-                <stop offset="0%" stopColor="#eef0f2" />
-                <stop offset="38%" stopColor="#c7cad0" />
-                <stop offset="55%" stopColor="#8d9096" />
-                <stop offset="72%" stopColor="#c7cad0" />
-                <stop offset="100%" stopColor="#f4f5f6" />
-              </linearGradient>
-              <linearGradient id="handleGradL" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#3c2e22" />
-                <stop offset="50%" stopColor="#241a13" />
-                <stop offset="100%" stopColor="#120c08" />
-              </linearGradient>
-              <linearGradient id="bolsterGradL" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#4a4c50" />
-                <stop offset="100%" stopColor="#1c1d1f" />
-              </linearGradient>
-            </defs>
-            {/* poignée */}
-            <rect x="0" y="40" width="95" height="40" rx="8" fill="url(#handleGradL)" />
-            <rect x="0" y="40" width="9" height="40" rx="4" fill="#000" opacity="0.35" />
-            <path d="M8,44 L88,44" stroke="#5a4636" strokeWidth="1.5" opacity="0.55" />
-            <circle cx="30" cy="60" r="3" fill="#7a6f63" />
-            <circle cx="30" cy="60" r="1.1" fill="#c9beac" />
-            <circle cx="66" cy="60" r="3" fill="#7a6f63" />
-            <circle cx="66" cy="60" r="1.1" fill="#c9beac" />
-            {/* mitre */}
-            <path d="M90,38 L120,29 L120,91 L90,82 Z" fill="url(#bolsterGradL)" />
-            {/* lame */}
-            <path d="M120,30 C220,24 330,28 380,42 Q398,50 400,60 Q392,68 360,78 C300,96 200,98 120,90 Z" fill="url(#bladeGradL)" stroke="#6b6e73" strokeWidth="0.5" />
-            <path d="M132,86 C210,94 300,92 355,76" fill="none" stroke="#ffffff" strokeOpacity="0.55" strokeWidth="1.4" strokeLinecap="round" />
-            <path d="M128,33 C210,28 310,30 372,42" fill="none" stroke="#ffffff" strokeOpacity="0.35" strokeWidth="1" strokeLinecap="round" />
-          </svg>
-
-          <svg className="intro-knife" ref={knifeRightRef} viewBox="0 0 400 120" aria-hidden="true">
-            <defs>
-              <linearGradient id="bladeGradR" x1="1" y1="0" x2="0.7" y2="1">
-                <stop offset="0%" stopColor="#eef0f2" />
-                <stop offset="38%" stopColor="#c7cad0" />
-                <stop offset="55%" stopColor="#8d9096" />
-                <stop offset="72%" stopColor="#c7cad0" />
-                <stop offset="100%" stopColor="#f4f5f6" />
-              </linearGradient>
-              <linearGradient id="handleGradR" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#3c2e22" />
-                <stop offset="50%" stopColor="#241a13" />
-                <stop offset="100%" stopColor="#120c08" />
-              </linearGradient>
-              <linearGradient id="bolsterGradR" x1="1" y1="0" x2="0" y2="0">
-                <stop offset="0%" stopColor="#4a4c50" />
-                <stop offset="100%" stopColor="#1c1d1f" />
-              </linearGradient>
-            </defs>
-            {/* lame (miroir : pointe à gauche) */}
-            <path d="M280,30 C180,24 70,28 20,42 Q2,50 0,60 Q8,68 40,78 C100,96 200,98 280,90 Z" fill="url(#bladeGradR)" stroke="#6b6e73" strokeWidth="0.5" />
-            <path d="M268,86 C190,94 100,92 45,76" fill="none" stroke="#ffffff" strokeOpacity="0.55" strokeWidth="1.4" strokeLinecap="round" />
-            <path d="M272,33 C190,28 90,30 28,42" fill="none" stroke="#ffffff" strokeOpacity="0.35" strokeWidth="1" strokeLinecap="round" />
-            {/* mitre */}
-            <path d="M310,38 L280,29 L280,91 L310,82 Z" fill="url(#bolsterGradR)" />
-            {/* poignée */}
-            <rect x="305" y="40" width="95" height="40" rx="8" fill="url(#handleGradR)" />
-            <rect x="391" y="40" width="9" height="40" rx="4" fill="#000" opacity="0.35" />
-            <path d="M312,44 L392,44" stroke="#5a4636" strokeWidth="1.5" opacity="0.55" />
-            <circle cx="370" cy="60" r="3" fill="#7a6f63" />
-            <circle cx="370" cy="60" r="1.1" fill="#c9beac" />
-            <circle cx="334" cy="60" r="3" fill="#7a6f63" />
-            <circle cx="334" cy="60" r="1.1" fill="#c9beac" />
-          </svg>
+          <img className="intro-knife" ref={knifeLeftRef} src={knifeLeftImg} alt="" aria-hidden="true" />
+          <img className="intro-knife" ref={knifeRightRef} src={knifeRightImg} alt="" aria-hidden="true" />
         </div>
 
         <div className="intro-sparks" ref={sparksRef} aria-hidden="true">
