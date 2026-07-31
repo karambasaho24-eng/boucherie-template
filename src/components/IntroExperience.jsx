@@ -27,7 +27,6 @@ export default function IntroExperience({ onDone }) {
   const rootRef = useRef(null)
   const knifeLeftRef = useRef(null)
   const knifeRightRef = useRef(null)
-  const flashRef = useRef(null)
   const sparksRef = useRef(null)
   const meatBigRef = useRef(null)
   const meatSliceRef = useRef(null)
@@ -108,9 +107,7 @@ export default function IntroExperience({ onDone }) {
         ],
       }, swingStart)
 
-      // 2. Impact : flash, étincelles, secousse écran, découpe nette
-      tl.to(flashRef.current, { opacity: 1, duration: 0.04 }, impactT)
-      tl.to(flashRef.current, { opacity: 0, duration: 0.4, ease: 'power2.out' }, impactT + 0.04)
+      // 2. Impact : étincelles, secousse écran, découpe nette
       tl.to(rootRef.current, {
         keyframes: [
           { x: -4, y: 2, duration: 0.03 },
@@ -170,18 +167,14 @@ export default function IntroExperience({ onDone }) {
         ease: 'power1.out',
       }, impactT + 0.12)
 
-      // Les couteaux se retirent légèrement puis s'estompent
-      tl.to([knifeLeftRef.current, knifeRightRef.current], {
-        opacity: 0,
-        duration: 0.5,
-        ease: 'power2.out',
-      }, impactT + 0.35)
       fogEls.forEach((el) => {
         tl.to(el, { opacity: 0, duration: 0.7, ease: 'power2.out' }, impactT + 0.3)
       })
 
       // 4. Le fond s'efface pendant la chute — le site apparaît derrière,
-      // aucune action requise
+      // aucune action requise. Les couteaux restent pleinement opaques
+      // jusqu'à la toute fin : c'est TOUTE la scène qui s'efface d'un
+      // bloc, jamais le couteau seul qui devient translucide.
       tl.to(rootRef.current, { opacity: 0, duration: 0.7, ease: 'power2.out' }, impactT + 0.55)
     }, rootRef)
 
@@ -245,8 +238,6 @@ export default function IntroExperience({ onDone }) {
             <span key={i} className="spark" />
           ))}
         </div>
-
-        <div className="intro-flash" ref={flashRef} aria-hidden="true" />
       </div>
 
       {soundAvailable && (
