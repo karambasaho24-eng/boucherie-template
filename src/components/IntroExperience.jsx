@@ -3,6 +3,8 @@ import { gsap } from 'gsap'
 import './IntroExperience.css'
 import knifeLeftImg from '../assets/intro/couperet-left.png'
 import knifeRightImg from '../assets/intro/couperet-right.png'
+import meatBigImg from '../assets/intro/viande-piece.png'
+import meatSliceImg from '../assets/intro/viande-tranche.png'
 
 const SESSION_KEY = 'intro_seen_v2'
 // Place un fichier audio ici (mp3/ogg, ambiance forge/atelier, courte boucle)
@@ -27,8 +29,8 @@ export default function IntroExperience({ onDone }) {
   const knifeRightRef = useRef(null)
   const flashRef = useRef(null)
   const sparksRef = useRef(null)
-  const meatTopRef = useRef(null)
-  const meatBottomRef = useRef(null)
+  const meatBigRef = useRef(null)
+  const meatSliceRef = useRef(null)
   const meatShadowRef = useRef(null)
   const fogRefs = useRef([])
   const audioRef = useRef(null)
@@ -73,7 +75,7 @@ export default function IntroExperience({ onDone }) {
           { opacity: 0, x: i % 2 === 0 ? -40 : 40 },
           { opacity: 0.5, x: 0, duration: 1.8, ease: 'sine.out' }, 0)
       })
-      tl.fromTo([meatTopRef.current, meatBottomRef.current],
+      tl.fromTo(meatBigRef.current,
         { opacity: 0, scale: 0.92 },
         { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out' }, 0.25)
 
@@ -122,14 +124,25 @@ export default function IntroExperience({ onDone }) {
           }, impactT)
       })
 
-      // 3. La moitié basse tombe (accélération façon gravité + rotation)
-      tl.to(meatBottomRef.current, {
-        y: '85vh',
-        rotate: 22,
-        x: 18,
+      // 3. La tranche vient d'être découpée : elle apparaît au sommet du
+      // bloc puis tombe (accélération façon gravité + rotation). Le gros
+      // bloc encaisse un léger choc.
+      tl.set(meatSliceRef.current, { xPercent: -50, yPercent: -50, x: 0, y: '-7vh', rotate: 0, opacity: 1 }, impactT)
+      tl.to(meatBigRef.current, {
+        keyframes: [
+          { scale: 1.025, duration: 0.05 },
+          { scale: 1, duration: 0.12 },
+        ],
+        ease: 'power1.out',
+      }, impactT)
+      tl.to(meatSliceRef.current, {
+        y: '82vh',
+        x: 20,
+        rotate: 24,
         duration: 1.1,
         ease: 'power2.in',
-      }, impactT + 0.12)
+      }, impactT + 0.1)
+      tl.to(meatSliceRef.current, { opacity: 0, duration: 0.3 }, impactT + 0.9)
       tl.to(meatShadowRef.current, {
         opacity: 0,
         scaleX: 1.6,
@@ -143,7 +156,6 @@ export default function IntroExperience({ onDone }) {
         duration: 0.5,
         ease: 'power2.out',
       }, impactT + 0.35)
-      tl.to(meatTopRef.current, { opacity: 0, duration: 0.5, ease: 'power2.out' }, impactT + 0.5)
       fogEls.forEach((el) => {
         tl.to(el, { opacity: 0, duration: 0.7, ease: 'power2.out' }, impactT + 0.3)
       })
@@ -199,33 +211,8 @@ export default function IntroExperience({ onDone }) {
 
         <div className="intro-meat" aria-hidden="true">
           <div className="intro-meat-shadow" ref={meatShadowRef} />
-          <svg className="meat-piece meat-piece--top" ref={meatTopRef} viewBox="0 0 320 170">
-            <defs>
-              <clipPath id="clipTop"><rect x="0" y="0" width="320" height="83" /></clipPath>
-              <linearGradient id="meatGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#9c3a2c" />
-                <stop offset="45%" stopColor="#7c2a20" />
-                <stop offset="100%" stopColor="#551b15" />
-              </linearGradient>
-            </defs>
-            <g clipPath="url(#clipTop)">
-              <rect x="40" y="35" width="240" height="100" rx="50" fill="url(#meatGrad)" />
-              <path d="M48,48 Q160,26 272,48 L272,58 Q160,40 48,58 Z" fill="#ecdcc6" opacity="0.85" />
-              <path d="M95,72 Q130,62 160,74 T225,77" stroke="#f2e2cf" strokeWidth="4" fill="none" opacity="0.3" strokeLinecap="round" />
-              <path d="M85,95 Q130,88 175,97 T240,98" stroke="#3a0f0c" strokeWidth="5" fill="none" opacity="0.25" strokeLinecap="round" />
-            </g>
-          </svg>
-          <svg className="meat-piece meat-piece--bottom" ref={meatBottomRef} viewBox="0 0 320 170">
-            <defs>
-              <clipPath id="clipBottom"><rect x="0" y="83" width="320" height="87" /></clipPath>
-            </defs>
-            <g clipPath="url(#clipBottom)">
-              <rect x="40" y="35" width="240" height="100" rx="50" fill="url(#meatGrad)" />
-              <path d="M85,95 Q130,88 175,97 T240,98" stroke="#3a0f0c" strokeWidth="5" fill="none" opacity="0.25" strokeLinecap="round" />
-              <path d="M70,118 Q150,132 250,116" stroke="#3a0f0c" strokeWidth="3" fill="none" opacity="0.2" strokeLinecap="round" />
-              <line x1="40" y1="84" x2="280" y2="84" stroke="#fbeee0" strokeWidth="2.5" opacity="0.9" />
-            </g>
-          </svg>
+          <img className="meat-big" ref={meatBigRef} src={meatBigImg} alt="" />
+          <img className="meat-slice" ref={meatSliceRef} src={meatSliceImg} alt="" />
         </div>
 
         <div className="intro-knives-row">

@@ -57,17 +57,20 @@
   transform: translateX(-50%);
 }
 
-.meat-piece {
+.meat-big {
+  width: min(30vw, 340px);
+  height: auto;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.5));
+}
+
+.meat-slice {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(30vw, 320px);
+  width: min(15vw, 180px);
   height: auto;
-  transform: translate(-50%, -50%);
-  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.5));
-}
-.meat-piece--top,
-.meat-piece--bottom {
+  opacity: 0;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.5));
   will-change: transform, opacity;
 }
 
@@ -160,6 +163,7 @@
 
 @media (max-width: 640px) {
   .intro-knife { width: 60vw; }
-  .meat-piece { width: 46vw; }
+  .meat-big { width: 46vw; }
+  .meat-slice { width: 24vw; }
   .intro-meat-shadow { width: 46vw; }
 }
