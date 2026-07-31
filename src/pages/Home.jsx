@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { fetchAvailableProducts } from '../lib/api'
 import { supabase } from '../lib/supabaseClient'
 import ProductCard from '../components/ProductCard'
+import IntroExperience from '../components/IntroExperience'
 
 function useReveal(deps = []) {
   useEffect(() => {
@@ -111,9 +112,15 @@ export default function Home({ config }) {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
+  const [introDone, setIntroDone] = useState(false)
   useReveal([loading, products.length])
   const heroRef = useParallaxHero()
   const tiltRef = useMouseTilt()
+
+  useEffect(() => {
+    document.body.style.overflow = introDone ? '' : 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [introDone])
 
   useEffect(() => {
     let cancelled = false
@@ -172,6 +179,12 @@ export default function Home({ config }) {
 
   return (
     <div className="home-page">
+      <IntroExperience
+        siteTitle={config?.site_title}
+        tagline={config?.hero_subtitle}
+        logoUrl={config?.logo_url}
+        onDone={() => setIntroDone(true)}
+      />
 
       {/* ── HERO ── */}
       <section className="hero" ref={heroRef}>
