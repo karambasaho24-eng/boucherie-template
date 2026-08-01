@@ -80,7 +80,7 @@ export default function IntroExperience({ onDone }) {
         { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out' }, 0.25)
       // La tranche est déjà posée sur le bloc, discrète, dès le début —
       // elle ne fera que tomber au moment de l'impact.
-      tl.set(meatSliceRef.current, { xPercent: -50, yPercent: -50, x: 0, y: '-14vh', rotate: 0 }, 0.25)
+      tl.set(meatSliceRef.current, { xPercent: -50, yPercent: -50, x: 0, y: 0, rotate: 0 }, 0.25)
       tl.fromTo(meatSliceRef.current,
         { opacity: 0 },
         { opacity: 1, duration: 0.8, ease: 'power2.out' }, 0.25)

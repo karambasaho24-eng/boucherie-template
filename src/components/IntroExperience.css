@@ -60,6 +60,7 @@
 .meat-big {
   width: min(24vw, 280px);
   height: auto;
+  clip-path: inset(22% 0 0 0);
   filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.5));
 }
 
