@@ -58,7 +58,7 @@
 }
 
 .meat-big {
-  width: min(30vw, 340px);
+  width: min(24vw, 280px);
   height: auto;
   filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.5));
 }
@@ -86,7 +86,7 @@
 }
 
 .intro-knife {
-  width: min(36vw, 460px);
+  width: min(42vw, 560px);
   height: auto;
   display: block;
   filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.55));
@@ -132,8 +132,8 @@
 }
 
 @media (max-width: 640px) {
-  .intro-knife { width: 60vw; }
-  .meat-big { width: 46vw; }
-  .meat-slice { width: 24vw; }
-  .intro-meat-shadow { width: 46vw; }
+  .intro-knife { width: 68vw; }
+  .meat-big { width: 30vw; }
+  .meat-slice { width: 18vw; }
+  .intro-meat-shadow { width: 30vw; }
 }
