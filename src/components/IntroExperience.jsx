@@ -78,6 +78,12 @@ export default function IntroExperience({ onDone }) {
       tl.fromTo(meatBigRef.current,
         { opacity: 0, scale: 0.92 },
         { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out' }, 0.25)
+      // La tranche est déjà posée sur le bloc, discrète, dès le début —
+      // elle ne fera que tomber au moment de l'impact.
+      tl.set(meatSliceRef.current, { xPercent: -50, yPercent: -50, x: 0, y: '-6vh', rotate: 0 }, 0.25)
+      tl.fromTo(meatSliceRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.8, ease: 'power2.out' }, 0.25)
 
       // 1. Frappe en arc de cercle — les couteaux se lèvent depuis les
       // côtés hauts, puis décrivent une courbe descendante jusqu'à
@@ -124,10 +130,9 @@ export default function IntroExperience({ onDone }) {
         ease: 'none',
       }, impactT)
 
-      // 3. La tranche vient d'être découpée : elle apparaît au sommet du
-      // bloc puis tombe (accélération façon gravité + rotation). Le gros
-      // bloc encaisse un léger choc.
-      tl.set(meatSliceRef.current, { xPercent: -50, yPercent: -50, x: 0, y: '-6vh', rotate: 0, opacity: 1 }, impactT)
+      // 3. Impact : la tranche, déjà posée sur le bloc, se détache et
+      // tombe (accélération façon gravité + rotation). Le gros bloc
+      // encaisse un léger choc.
       tl.to(meatBigRef.current, {
         keyframes: [
           { scale: 1.025, duration: 0.05 },
@@ -206,13 +211,16 @@ export default function IntroExperience({ onDone }) {
         <div className="intro-meat" aria-hidden="true">
           <div className="intro-meat-shadow" ref={meatShadowRef} />
           <img className="meat-big" ref={meatBigRef} src={meatBigImg} alt="" />
-          <img className="meat-slice" ref={meatSliceRef} src={meatSliceImg} alt="" />
         </div>
 
         <div className="intro-knives-row">
           <img className="intro-knife" ref={knifeLeftRef} src={knifeLeftImg} alt="" aria-hidden="true" />
           <img className="intro-knife" ref={knifeRightRef} src={knifeRightImg} alt="" aria-hidden="true" />
         </div>
+
+        {/* Au-dessus des couteaux : posée sur le bloc dès le début,
+            visible en permanence, elle ne fait que tomber à l'impact. */}
+        <img className="meat-slice" ref={meatSliceRef} src={meatSliceImg} alt="" aria-hidden="true" />
       </div>
 
       {soundAvailable && (
