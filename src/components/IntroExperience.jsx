@@ -27,7 +27,6 @@ export default function IntroExperience({ onDone }) {
   const rootRef = useRef(null)
   const knifeLeftRef = useRef(null)
   const knifeRightRef = useRef(null)
-  const sparksRef = useRef(null)
   const meatBigRef = useRef(null)
   const meatSliceRef = useRef(null)
   const meatShadowRef = useRef(null)
@@ -57,7 +56,6 @@ export default function IntroExperience({ onDone }) {
     }
 
     const ctx = gsap.context(() => {
-      const sparkEls = sparksRef.current?.querySelectorAll('.spark') || []
       const fogEls = fogRefs.current.filter(Boolean)
 
       const tl = gsap.timeline({
@@ -107,7 +105,7 @@ export default function IntroExperience({ onDone }) {
         ],
       }, swingStart)
 
-      // 2. Impact : étincelles, secousse écran, découpe nette
+      // 2. Impact : secousse écran, découpe nette
       tl.to(rootRef.current, {
         keyframes: [
           { x: -4, y: 2, duration: 0.03 },
@@ -125,21 +123,6 @@ export default function IntroExperience({ onDone }) {
         ],
         ease: 'none',
       }, impactT)
-
-      sparkEls.forEach((s, i) => {
-        const angle = (Math.PI * 2 * i) / sparkEls.length + (Math.random() - 0.5) * 0.5
-        const dist = 40 + Math.random() * 90
-        tl.fromTo(s,
-          { opacity: 1, x: 0, y: 0, scale: 1 },
-          {
-            x: Math.cos(angle) * dist,
-            y: Math.sin(angle) * dist,
-            opacity: 0,
-            scale: 0.2,
-            duration: 0.5 + Math.random() * 0.3,
-            ease: 'power2.out',
-          }, impactT)
-      })
 
       // 3. La tranche vient d'être découpée : elle apparaît au sommet du
       // bloc puis tombe (accélération façon gravité + rotation). Le gros
@@ -171,11 +154,9 @@ export default function IntroExperience({ onDone }) {
         tl.to(el, { opacity: 0, duration: 0.7, ease: 'power2.out' }, impactT + 0.3)
       })
 
-      // 4. Le fond s'efface pendant la chute — le site apparaît derrière,
-      // aucune action requise. Les couteaux restent pleinement opaques
-      // jusqu'à la toute fin : c'est TOUTE la scène qui s'efface d'un
-      // bloc, jamais le couteau seul qui devient translucide.
-      tl.to(rootRef.current, { opacity: 0, duration: 0.7, ease: 'power2.out' }, impactT + 0.55)
+      // 4. La scène disparaît en un cut rapide (plus de fondu long) —
+      // le site apparaît d'un coup pendant la chute, aucune action requise.
+      tl.to(rootRef.current, { opacity: 0, duration: 0.15, ease: 'power2.out' }, impactT + 0.75)
     }, rootRef)
 
     return () => ctx.revert()
@@ -231,12 +212,6 @@ export default function IntroExperience({ onDone }) {
         <div className="intro-knives-row">
           <img className="intro-knife" ref={knifeLeftRef} src={knifeLeftImg} alt="" aria-hidden="true" />
           <img className="intro-knife" ref={knifeRightRef} src={knifeRightImg} alt="" aria-hidden="true" />
-        </div>
-
-        <div className="intro-sparks" ref={sparksRef} aria-hidden="true">
-          {Array.from({ length: 16 }).map((_, i) => (
-            <span key={i} className="spark" />
-          ))}
         </div>
       </div>
 

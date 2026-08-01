@@ -92,37 +92,6 @@
   will-change: transform, opacity;
 }
 
-.intro-sparks {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-  z-index: 3;
-}
-
-.spark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: #fff3d6;
-  box-shadow: 0 0 6px 1px rgba(255, 214, 130, 0.9);
-  opacity: 0;
-}
-
-.intro-flash {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #ffe6a8 32%, transparent 68%);
-  opacity: 0;
-  pointer-events: none;
-}
-
 .intro-sound-toggle {
   position: absolute;
   bottom: 2rem;
